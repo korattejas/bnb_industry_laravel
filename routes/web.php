@@ -1,27 +1,20 @@
 <?php
 
-use App\Http\Controllers\Admin\AppointmentsController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactSubmissionsController;
 use App\Http\Controllers\Admin\CustomerReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\HiringController;
+// use App\Http\Controllers\Admin\HiringController;
 use App\Http\Controllers\Admin\HomeCounterController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PoliciesController;
-use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\PortfolioController;
-use App\Http\Controllers\Admin\ServiceCategoryController;
-use App\Http\Controllers\Admin\ServiceSubcategoryController;
-use App\Http\Controllers\Admin\ServiceCityPriceController;
-use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductSubcategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\TeamMemberController;
-use App\Http\Controllers\Admin\ContractSignedController;
-use App\Http\Controllers\ContractController;
 use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
@@ -33,13 +26,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/beautician-contracts', [ContractController::class, 'showAgreements']);
-Route::post('/contracts/verify', [ContractController::class, 'verifyProvider'])->name('contracts.verify');
-Route::get('/contracts/sign', function () {
-    return view('contracts.sign');
-})->name('contracts.sign');
-Route::post('/contracts/save', [ContractController::class, 'saveSignature'])->name('contracts.save');
-Route::get('/contracts/success', [ContractController::class, 'success'])->name('contracts.success');
+
 
 
 /* Admin Route */
@@ -51,41 +38,29 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-        /* Contract Signed Route */
-        Route::get('contract-signed', [ContractSignedController::class, 'index'])->name('admin.contract-signed.index');
-        Route::get('getDataContracts', [ContractSignedController::class, 'getDataContracts'])->name('getDataContracts');
-        Route::delete('contract-signed/{id}', [ContractSignedController::class, 'destroy']);
-        Route::get('contract-signed/status/{id}/{status}', [ContractSignedController::class, 'changeStatus']);
 
 
-        /* Services Category Route */
-        Route::get('service-category', [ServiceCategoryController::class, 'index'])->name('admin.service-category.index');
-        Route::get('service-category/create', [ServiceCategoryController::class, 'create'])->name('admin.service-category.create');
-        Route::post('service-category/store', [ServiceCategoryController::class, 'store']);
-        Route::delete('service-category/{id}', [ServiceCategoryController::class, 'destroy']);
-        Route::get('service-category/edit/{id}', [ServiceCategoryController::class, 'edit'])->name('admin.service-category.edit');
-        Route::get('getDataServiceCategory', [ServiceCategoryController::class, 'getDataServiceCategory'])->name('getDataServiceCategory');
-        Route::get('service-category/status/{id}/{status}', [ServiceCategoryController::class, 'changeStatus']);
-        Route::get('service-category/priority-status/{id}/{status}', [ServiceCategoryController::class, 'changePriorityStatus']);
 
-        /* Services Subcategory Route */
-        Route::get('service-subcategory', [ServiceSubcategoryController::class, 'index'])->name('admin.service-subcategory.index');
-        Route::get('service-subcategory/create', [ServiceSubcategoryController::class, 'create'])->name('admin.service-subcategory.create');
-        Route::post('service-subcategory/store', [ServiceSubcategoryController::class, 'store']);
-        Route::delete('service-subcategory/{id}', [ServiceSubcategoryController::class, 'destroy']);
-        Route::get('service-subcategory/edit/{id}', [ServiceSubcategoryController::class, 'edit'])->name('admin.service-subcategory.edit');
-        Route::get('getDataServiceSubcategory', [ServiceSubcategoryController::class, 'getDataServiceSubcategory'])->name('getDataServiceSubcategory');
-        Route::get('service-subcategory/status/{id}/{status}', [ServiceSubcategoryController::class, 'changeStatus']);
-        Route::get('service-subcategory/priority-status/{id}/{status}', [ServiceSubcategoryController::class, 'changePriorityStatus']);
+        /* Products Category Route */
+        Route::get('product-category', [ProductCategoryController::class, 'index'])->name('admin.product-category.index');
+        Route::get('product-category/create', [ProductCategoryController::class, 'create'])->name('admin.product-category.create');
+        Route::post('product-category/store', [ProductCategoryController::class, 'store']);
+        Route::delete('product-category/{id}', [ProductCategoryController::class, 'destroy']);
+        Route::get('product-category/edit/{id}', [ProductCategoryController::class, 'edit'])->name('admin.product-category.edit');
+        Route::get('getDataProductCategory', [ProductCategoryController::class, 'getDataProductCategory'])->name('getDataProductCategory');
+        Route::get('product-category/status/{id}/{status}', [ProductCategoryController::class, 'changeStatus']);
+        Route::get('product-category/priority-status/{id}/{status}', [ProductCategoryController::class, 'changePriorityStatus']);
 
-        /* product brand */
-        Route::get('product-brand', [ProductBrandController::class, 'index'])->name('admin.product-brand.index');
-        Route::get('product-brand/create', [ProductBrandController::class, 'create'])->name('admin.product-brand.create');
-        Route::post('product-brand/store', [ProductBrandController::class, 'store']);
-        Route::delete('product-brand/{id}', [ProductBrandController::class, 'destroy']);
-        Route::get('product-brand/edit/{id}', [ProductBrandController::class, 'edit'])->name('admin.product-brand.edit');
-        Route::get('getDataProductBrand', [ProductBrandController::class, 'getDataProductBrand'])->name('getDataProductBrand');
-        Route::get('product-brand/status/{id}/{status}', [ProductBrandController::class, 'changeStatus']);
+        /* Products Subcategory Route */
+        Route::get('product-subcategory', [ProductSubcategoryController::class, 'index'])->name('admin.product-subcategory.index');
+        Route::get('product-subcategory/create', [ProductSubcategoryController::class, 'create'])->name('admin.product-subcategory.create');
+        Route::post('product-subcategory/store', [ProductSubcategoryController::class, 'store']);
+        Route::delete('product-subcategory/{id}', [ProductSubcategoryController::class, 'destroy']);
+        Route::get('product-subcategory/edit/{id}', [ProductSubcategoryController::class, 'edit'])->name('admin.product-subcategory.edit');
+        Route::get('getDataProductSubcategory', [ProductSubcategoryController::class, 'getDataProductSubcategory'])->name('getDataProductSubcategory');
+        Route::get('product-subcategory/status/{id}/{status}', [ProductSubcategoryController::class, 'changeStatus']);
+        Route::get('product-subcategory/priority-status/{id}/{status}', [ProductSubcategoryController::class, 'changePriorityStatus']);
+
 
          /* Portfoio */
         Route::get('portfolio', [PortfolioController::class, 'index'])->name('admin.portfolio.index');
@@ -109,49 +84,26 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('blog-category/status/{id}/{status}', [BlogCategoryController::class, 'changeStatus']);
         Route::get('blog-category/priority-status/{id}/{status}', [BlogCategoryController::class, 'changePriorityStatus']);
 
-        /* Services Route */
-        Route::get('service', [ServiceController::class, 'index'])->name('admin.service.index');
-        Route::get('service/create', [ServiceController::class, 'create'])->name('admin.service.create');
-        Route::post('service/store', [ServiceController::class, 'store']);
-        Route::delete('service/{id}', [ServiceController::class, 'destroy']);
-        Route::get('service/edit/{id}', [ServiceController::class, 'edit'])->name('admin.service.edit');
-        Route::get('getDataService', [ServiceController::class, 'getDataService'])->name('getDataService');
-        Route::get('service/status/{id}/{status}', [ServiceController::class, 'changeStatus']);
-        Route::get('service/priority-status/{id}/{status}', [ServiceController::class, 'changePriorityStatus']);
-        Route::get('service-view/{id}', [ServiceController::class, 'view']);
-        Route::get('service/export-pdf', [ServiceController::class, 'exportPdf'])->name('admin.service.export.pdf');
-        Route::get('service/export-excel', [ServiceController::class, 'exportExcel'])->name('admin.service.export.excel');
-        Route::get('service/get-subcategories/{categoryId}', [ServiceController::class, 'getSubcategories']);
+        /* Products Route */
+        Route::get('product', [ProductController::class, 'index'])->name('admin.product.index');
+        Route::get('product/create', [ProductController::class, 'create'])->name('admin.product.create');
+        Route::post('product/store', [ProductController::class, 'store']);
+        Route::delete('product/{id}', [ProductController::class, 'destroy']);
+        Route::get('product/edit/{id}', [ProductController::class, 'edit'])->name('admin.product.edit');
+        Route::get('getDataProduct', [ProductController::class, 'getDataProduct'])->name('getDataProduct');
+        Route::get('product/status/{id}/{status}', [ProductController::class, 'changeStatus']);
+        Route::get('product/priority-status/{id}/{status}', [ProductController::class, 'changePriorityStatus']);
+        Route::get('product-view/{id}', [ProductController::class, 'view']);
+        Route::get('product/export-pdf', [ProductController::class, 'exportPdf'])->name('admin.product.export.pdf');
+        Route::get('product/export-excel', [ProductController::class, 'exportExcel'])->name('admin.product.export.excel');
+        Route::get('product/get-subcategories/{categoryId}', [ProductController::class, 'getSubcategories']);
+        Route::post('product/remove-image', [ProductController::class, 'removeImage'])->name('admin.product.removeImage');
 
 
-        /* Services City Price Route */
-        Route::get('service-city-price', [ServiceCityPriceController::class, 'index'])->name('admin.service-city-price.index');
-        Route::get('service-city-price/create', [ServiceCityPriceController::class, 'create'])->name('admin.service-city-price.create');
-        Route::post('service-city-price/store', [ServiceCityPriceController::class, 'store']);
-        Route::delete('service-city-price/{id}', [ServiceCityPriceController::class, 'destroy']);
-        Route::get('service-city-price/edit/{id}', [ServiceCityPriceController::class, 'edit'])->name('admin.service-city-price.edit');
-        Route::get('getDataServiceCityPrice', [ServiceCityPriceController::class, 'getDataServiceCityPrice'])->name('getDataServiceCityPrice');
-        Route::get('service-city-price/status/{id}/{status}', [ServiceCityPriceController::class, 'changeStatus']);
-        Route::get('service-city-price/priority-status/{id}/{status}', [ServiceCityPriceController::class, 'changePriorityStatus']);
-        Route::get('service-city-price-view/{id}', [ServiceCityPriceController::class, 'view']);
-        Route::get('services-by-category', [ServiceCityPriceController::class, 'getServicesByCategory'])
-            ->name('admin.services.by-category');
-        Route::get('service-city-price/export-pdf', [ServiceCityPriceController::class, 'exportPdf'])->name('admin.service-city-price.export.pdf');
-        Route::get('service-city-price/export-excel', [ServiceCityPriceController::class, 'exportExcel'])->name('admin.service-city-price.export.excel');
-        Route::get('service-city-price/get-serviceCityPriceSubCategories/{categoryId}', [ServiceCityPriceController::class, 'getSubcategories']);
+        Route::get('product/get-subcategories/{categoryId}', [ProductController::class, 'getSubcategories']);
+        Route::post('product/remove-image', [ProductController::class, 'removeImage'])->name('admin.product.removeImage');
 
-        // Team Members
-        Route::get('team', [TeamMemberController::class, 'index'])->name('admin.team.index');
-        Route::get('team/create', [TeamMemberController::class, 'create'])->name('admin.team.create');
-        Route::post('team/store', [TeamMemberController::class, 'store'])->name('admin.team.store');
-        Route::get('team/edit/{id}', [TeamMemberController::class, 'edit'])->name('admin.team.edit');
-        Route::delete('team/{id}', [TeamMemberController::class, 'destroy'])->name('admin.team.destroy');
-        Route::get('getDataTeamMembers', [TeamMemberController::class, 'getDataTeamMembers'])->name('getDataTeamMembers');
-        Route::get('team/status/{id}/{status}', [TeamMemberController::class, 'changeStatus'])->name('admin.team.changeStatus');
-        Route::get('team/priority-status/{id}/{status}', [TeamMemberController::class, 'changePriorityStatus'])->name('admin.team.changePriorityStatus');
-        Route::get('team-view/{id}', [TeamMemberController::class, 'view']);
-        Route::get('team/appointments-report/{id}', [TeamMemberController::class, 'getAppointmentsReport'])->name('admin.team.appointmentsReport');
-        Route::get('team/return-customers-report/{id}', [TeamMemberController::class, 'getReturnCustomersReport'])->name('admin.team.returnCustomersReport');
+
 
         // Customer Reviews
         Route::get('reviews', [CustomerReviewController::class, 'index'])->name('admin.reviews.index');
@@ -175,6 +127,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('blogs/priority-status/{id}/{status}', [BlogController::class, 'changeFeaturedStatus'])->name('admin.blogs.changeFeaturedStatus');
         Route::get('blogs-view/{id}', [BlogController::class, 'view']);
 
+        /* 
         // Hirings
         Route::get('hirings', [HiringController::class, 'index'])->name('admin.hirings.index');
         Route::get('hirings/create', [HiringController::class, 'create'])->name('admin.hirings.create');
@@ -185,6 +138,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('hirings/status/{id}/{status}', [HiringController::class, 'changeStatus'])->name('admin.hirings.changeStatus');
         Route::get('hirings/priority-status/{id}/{status}', [HiringController::class, 'changePopularStatus'])->name('admin.hirings.changePopularStatus');
         Route::get('hirings-view/{id}', [HiringController::class, 'view']);
+        */
 
         /* Home Counters Routes */
         Route::get('home-counters', [HomeCounterController::class, 'index'])->name('admin.home-counters.index');
@@ -206,16 +160,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('getDataFaqs', [FaqController::class, 'getDataFaqs'])->name('admin.faqs.data');
         Route::get('faqs/status/{id}/{status}', [FaqController::class, 'changeStatus'])->name('admin.faqs.status');
 
-        /* city Route */
-        Route::get('city', [CityController::class, 'index'])->name('admin.city.index');
-        Route::get('city/create', [CityController::class, 'create'])->name('admin.city.create');
-        Route::post('city/store', [CityController::class, 'store']);
-        Route::delete('city/{id}', [CityController::class, 'destroy']);
-        Route::get('city/edit/{id}', [CityController::class, 'edit'])->name('admin.city.edit');
-        Route::get('getDataCity', [CityController::class, 'getDataCity'])->name('getDataCity');
-        Route::get('city/status/{id}/{status}', [CityController::class, 'changeStatus']);
-        Route::get('city/priority-status/{id}/{status}', [CityController::class, 'changePriorityStatus'])->name('admin.city.priority-status');
-
         /* Setting Route */
         Route::get('setting', [SettingController::class, 'index'])->name('admin.setting.index');
         Route::get('setting/create', [SettingController::class, 'create'])->name('admin.setting.create');
@@ -232,22 +176,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('contact-submissions/{id}', [ContactSubmissionsController::class, 'destroy']);
         Route::get('contact-submissions-view/{id}', [ContactSubmissionsController::class, 'view']);
 
-        /* Appointments Route */
-        Route::get('appointments', [AppointmentsController::class, 'index'])->name('admin.appointments.index');
-        Route::get('appointments/export', [AppointmentsController::class, 'export'])->name('admin.appointments.export');
-        Route::get('appointments/create', [AppointmentsController::class, 'create'])->name('admin.appointments.create');
-        Route::post('appointments/store', [AppointmentsController::class, 'store']);
-        Route::get('appointments/edit/{id}', [AppointmentsController::class, 'edit'])->name('admin.appointments.edit');
-        Route::get('getDataAppointments', [AppointmentsController::class, 'getDataAppointments'])->name('getDataAppointments');
-        Route::get('appointments/status/{id}/{status}', [AppointmentsController::class, 'changeStatus']);
-        Route::delete('appointments/{id}', [AppointmentsController::class, 'destroy']);
-        Route::post('appointments/assign_member', [AppointmentsController::class, 'AssignMember'])->name('assign.members');
-        Route::post('appointments/update-amount', [AppointmentsController::class, 'updateAmount'])->name('admin.appointments.updateAmount');
-        Route::get('appointments-view/{id}', [AppointmentsController::class, 'view']);
-        Route::get('appointments/get-appoinmentSubcategories/{categoryId}', [AppointmentsController::class, 'getSubcategories']);
-        Route::get('appointments/{id}/pdf', [AppointmentsController::class, 'downloadPdf'])
-            ->name('admin.appointments.pdf');
-        Route::get('get-city-services/{cityId}', [AppointmentsController::class, 'getCityServices']);
+
 
 
 

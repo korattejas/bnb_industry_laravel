@@ -2,18 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BlogController;
-use App\Http\Controllers\Api\TeamMemberController;
 use App\Http\Controllers\Api\CustomerReviewController;
-use App\Http\Controllers\Api\HiringController;
+// use App\Http\Controllers\Api\HiringController;
 use App\Http\Controllers\Api\HomeCounterController;
-use App\Http\Controllers\Api\CityController;
-use App\Http\Controllers\Api\ProductBrandController;
 use App\Http\Controllers\Api\FaqsController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ContactSubmissionsController;
-use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\User\AuthenticationController;
 use App\Http\Controllers\Api\PoliciesController;
 use App\Http\Controllers\Api\PortfolioController;
@@ -21,7 +17,7 @@ use App\Http\Middleware\RequestModifier;
 use App\Http\Middleware\ResponseModifier;
 use App\Http\Middleware\SanitizeInput;
 use App\Http\Middleware\JWTTokenMiddleware;
-use App\Http\Controllers\Api\Beautician\BeauticianController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -43,48 +39,28 @@ Route::middleware([JWTTokenMiddleware::class, RequestModifier::class, ResponseMo
     Route::prefix('V1/customer')->group(function () {
         Route::post('profileUpdate', [AuthenticationController::class, 'profileUpdate']);
         Route::post('getProfile', [AuthenticationController::class, 'getProfile']);
-        Route::post('getTotalBookService', [AuthenticationController::class, 'getTotalBookService']);
-        Route::post('getBookServiceDetails', [AuthenticationController::class, 'getBookServiceDetails']);
+        Route::post('getTotalBookProduct', [AuthenticationController::class, 'getTotalBookProduct']);
+        Route::post('getBookProductDetails', [AuthenticationController::class, 'getBookProductDetails']);
         Route::get('logout', [AuthenticationController::class, 'logout']);
     });
 
     
 });
 
-Route::middleware([SanitizeInput::class])->group(function () {
-    Route::prefix('V1/beautician')->group(function () {
-        Route::post('sendLoginOtp', [BeauticianController::class, 'sendLoginOtp']);
-        Route::post('verifyLoginOtp', [BeauticianController::class, 'verifyLoginOtp']);
-    });
-});
 
-Route::middleware([JWTTokenMiddleware::class, SanitizeInput::class])->group(function () {
-    Route::prefix('V1/beautician')->group(function () {
-        Route::post('dashboard', [BeauticianController::class, 'dashboard']);
-        Route::post('getAppointments', [BeauticianController::class, 'getAppointments']);
-        Route::post('getAppointmentDetails', [BeauticianController::class, 'getAppointmentDetails']);
-        Route::post('updateStatus', [BeauticianController::class, 'updateStatus']);
-        Route::post('getProfile', [BeauticianController::class, 'getProfile']);
-    });
-});
 
 Route::middleware([RequestModifier::class, ResponseModifier::class, SanitizeInput::class])->group(function () {
     Route::prefix('V1/')->group(function () {
-        Route::get('serviceCategory', [ServiceController::class, 'getServiceCategory']);
-        Route::post('services', [ServiceController::class, 'getServices']);
+        Route::get('productCategory', [ProductController::class, 'getProductCategory']);
+        Route::post('products', [ProductController::class, 'getProducts']);
         Route::get('blogCategory', [BlogController::class, 'getBlogCategory']);
         Route::post('blogs', [BlogController::class, 'getBlogs']);
         Route::post('blogView', [BlogController::class, 'blogView']);
-        Route::get('teamMember', [TeamMemberController::class, 'getTeamMembers']);
-        Route::post('beauticianInquiryFormSubmit', [TeamMemberController::class, 'beauticianInquiryFormSubmit']);
         Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
-        Route::post('hiring', [HiringController::class, 'getHiring']);
+        // Route::post('hiring', [HiringController::class, 'getHiring']);
         Route::get('homeCounter', [HomeCounterController::class, 'getHomeCounter']);
-        Route::get('cities', [CityController::class, 'getCities']);
-        Route::get('productBrand', [ProductBrandController::class, 'getProductBrand']);
         Route::get('faqs', [FaqsController::class, 'getFaqs']);
         Route::get('settings', [SettingController::class, 'getsettings']);
-        Route::post('bookAppointment', [AppointmentsController::class, 'bookAppointment']);
         Route::post('contactFormSubmit', [ContactSubmissionsController::class, 'contactFormSubmit']);
         Route::post('policies', [PoliciesController::class, 'getPolicies']);
         Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
@@ -104,29 +80,24 @@ Route::middleware([JWTTokenMiddleware::class])->group(function () {
     Route::prefix('Test/V1/customer')->group(function () {
         Route::post('profileUpdate', [AuthenticationController::class, 'profileUpdate']);
         Route::post('getProfile', [AuthenticationController::class, 'getProfile']);
-        Route::post('getTotalBookService', [AuthenticationController::class, 'getTotalBookService']);
-        Route::post('getBookServiceDetails', [AuthenticationController::class, 'getBookServiceDetails']);
+        Route::post('getTotalBookProduct', [AuthenticationController::class, 'getTotalBookProduct']);
+        Route::post('getBookProductDetails', [AuthenticationController::class, 'getBookProductDetails']);
         Route::get('logout', [AuthenticationController::class, 'logout']);
     });
 });
 
 Route::middleware([])->group(function () {
     Route::prefix('Test/V1/')->group(function () {
-        Route::get('serviceCategory', [ServiceController::class, 'getServiceCategory']);
-        Route::post('services', [ServiceController::class, 'getServices']);
+        Route::get('productCategory', [ProductController::class, 'getProductCategory']);
+        Route::post('products', [ProductController::class, 'getProducts']);
         Route::get('blogCategory', [BlogController::class, 'getBlogCategory']);
         Route::post('blogs', [BlogController::class, 'getBlogs']);
         Route::post('blogView', [BlogController::class, 'blogView']);
-        Route::get('teamMember', [TeamMemberController::class, 'getTeamMembers']);
-        Route::post('beauticianInquiryFormSubmit', [TeamMemberController::class, 'beauticianInquiryFormSubmit']);
         Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
-        Route::post('hiring', [HiringController::class, 'getHiring']);
+        // Route::post('hiring', [HiringController::class, 'getHiring']);
         Route::get('homeCounter', [HomeCounterController::class, 'getHomeCounter']);
-        Route::get('cities', [CityController::class, 'getCities']);
-        Route::get('productBrand', [ProductBrandController::class, 'getProductBrand']);
         Route::get('faqs', [FaqsController::class, 'getFaqs']);
         Route::get('settings', [SettingController::class, 'getsettings']);
-        Route::post('bookAppointment', [AppointmentsController::class, 'bookAppointment']);
         Route::post('contactFormSubmit', [ContactSubmissionsController::class, 'contactFormSubmit']);
         Route::post('policies', [PoliciesController::class, 'getPolicies']);
         Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);

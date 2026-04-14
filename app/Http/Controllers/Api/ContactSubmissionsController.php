@@ -38,7 +38,7 @@ class ContactSubmissionsController extends Controller
                 'last_name'  => 'required|string|max:50',
                 'email'      => 'nullable|email|max:100',
                 'phone'      => 'nullable|string|max:20',
-                'service_id' => 'nullable|',
+                'product_id' => 'nullable|',
                 'subject'    => 'nullable|string|max:150',
                 'message'    => 'nullable|string',
             ]);
@@ -53,7 +53,7 @@ class ContactSubmissionsController extends Controller
                 'last_name'  => $request->last_name,
                 'email'      => $request->email,
                 'phone'      => $request->phone,
-                'service_id' => $request->service_id,
+                'product_id' => $request->product_id,
                 'subject'    => $request->subject,
                 'message'    => $request->message,
             ]);

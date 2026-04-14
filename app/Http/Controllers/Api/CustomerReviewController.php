@@ -30,12 +30,12 @@ class CustomerReviewController extends Controller
 
         try {
             $query = DB::table('customer_reviews as r')
-                ->leftJoin('services as s', 'r.service_id', '=', 's.id')
+                ->leftJoin('products as s', 'r.product_id', '=', 's.id')
                 ->select(
                     'r.id',
                     'r.category_id',
-                    'r.service_id',
-                    's.name as service_name',
+                    'r.product_id',
+                    's.name as product_name',
                     'r.customer_name',
                     DB::raw('CONCAT("' . asset('uploads/review/customer-photos') . '/", r.customer_photo) AS customer_photo'),
                     'r.rating',
@@ -62,8 +62,8 @@ class CustomerReviewController extends Controller
                 });
             }
 
-            if ($request->has('service_id') && !empty($request->service_id)) {
-                $query->where('r.category_id', $request->service_id);
+            if ($request->has('product_id') && !empty($request->product_id)) {
+                $query->where('r.category_id', $request->product_id);
             }
 
             if ($request->has('with_photos') && $request->with_photos) {

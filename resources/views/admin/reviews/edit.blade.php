@@ -49,16 +49,16 @@
                                             </div>
 
 
-                                            <!-- Service -->
+                                            <!-- Product -->
                                             <div class="col-md-6 mt-2">
                                                 <div class="form-group">
-                                                    <label>Service</label>
-                                                    <select name="service_id" class="form-control select2">
-                                                        <option value="">Select Service</option>
-                                                        @foreach ($services as $service)
-                                                            <option value="{{ $service->id }}"
-                                                                @if ($review->service_id == $service->id) selected @endif>
-                                                                {{ $service->name }}
+                                                    <label>Product</label>
+                                                    <select name="product_id" class="form-control select2">
+                                                        <option value="">Select Product</option>
+                                                        @foreach ($products as $product)
+                                                            <option value="{{ $product->id }}"
+                                                                @if ($review->product_id == $product->id) selected @endif>
+                                                                {{ $product->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>

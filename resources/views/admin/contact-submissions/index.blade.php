@@ -207,8 +207,8 @@
                         </div>
                         <div class="c-col-6">
                         <div class="c-detail-card">
-                            <label>Service</label>
-                            <p>${data.service_name ?? '-'}</p>
+                            <label>Product</label>
+                            <p>${data.product_name ?? '-'}</p>
                         </div>
                         </div>
                         <div class="c-col-6">

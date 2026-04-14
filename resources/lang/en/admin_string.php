@@ -154,7 +154,7 @@ return [
     'photographer' => 'Photographer',
     'photo' => 'Photo',
 
-    'service_name' => 'Service Name',
+    'product_name' => 'Product Name',
     'duration_day' => 'Duration Day',
     'currency' => 'Currency',
 

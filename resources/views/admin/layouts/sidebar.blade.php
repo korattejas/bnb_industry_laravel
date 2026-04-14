@@ -162,24 +162,12 @@
                 <span>Management</span>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.appointments.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.appointments.index') }}">
-                    <i data-feather="calendar"></i>
-                    <span class="menu-title text-truncate">Appointments</span>
-                </a>
-            </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.team.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.team.index') }}">
-                    <i data-feather="users"></i>
-                    <span class="menu-title text-truncate">Team Members</span>
-                </a>
-            </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.service.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.service.index') }}">
+            <li class="nav-item {{ Request::routeIs('admin.product.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.product.index') }}">
                     <i data-feather="shopping-bag"></i>
-                    <span class="menu-title text-truncate">Service Catalog</span>
+                    <span class="menu-title text-truncate">Product Catalog</span>
                 </a>
             </li>
 
@@ -187,33 +175,23 @@
                 <span>Configuration</span>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.service-category.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.service-category.index') }}">
+            <li class="nav-item {{ Request::routeIs('admin.product-category.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.product-category.index') }}">
                     <i data-feather="box"></i>
                     <span class="menu-title text-truncate">Categories</span>
                 </a>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.service-subcategory.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.service-subcategory.index') }}">
+            <li class="nav-item {{ Request::routeIs('admin.product-subcategory.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.product-subcategory.index') }}">
                     <i data-feather="layers"></i>
                     <span class="menu-title text-truncate">Sub Categories</span>
                 </a>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.city.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.city.index') }}">
-                    <i data-feather="map-pin"></i>
-                    <span class="menu-title text-truncate">City List</span>
-                </a>
-            </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.service-city-price.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.service-city-price.index') }}">
-                    <i data-feather="dollar-sign"></i>
-                    <span class="menu-title text-truncate">Service Pricing</span>
-                </a>
-            </li>
+
+
 
             <li class=" navigation-header">
                 <span>Communication</span>
@@ -226,23 +204,23 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.reviews.index') ? 'active' : '' }}">
+            <!-- <li class="nav-item {{ Request::routeIs('admin.reviews.index') ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('admin.reviews.index') }}">
                     <i data-feather="star"></i>
                     <span class="menu-title text-truncate">Reviews</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class=" navigation-header">
                 <span>Content</span>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.portfolio.index') ? 'active' : '' }}">
+            <!-- <li class="nav-item {{ Request::routeIs('admin.portfolio.index') ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('admin.portfolio.index') }}">
                     <i data-feather="image"></i>
                     <span class="menu-title text-truncate">Portfolio</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="nav-item {{ Request::routeIs('admin.blogs.index') ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('admin.blogs.index') }}">

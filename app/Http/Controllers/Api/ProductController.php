@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProductCategory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
+use Exception;
+
+class ProductController extends Controller
+{
+    protected mixed $success_status, $exception_status, $backend_error_status, $validation_error_status, $common_error_message;
+
+    protected string $controller_name;
+
+    public function __construct()
+    {
+        $this->controller_name = 'API/ProductController';
+        $this->success_status = config('custom.status_code_for_success');
+        $this->exception_status = config('custom.status_code_for_exception_error');
+        $this->backend_error_status = config('custom.status_code_for_backend_error');
+        $this->validation_error_status = config('custom.status_code_for_validation_error');
+        $this->common_error_message = config('custom.common_error_message');
+    }
+
+    public function getProductCategory(): JsonResponse
+    {
+        $function_name = 'getProductCategory';
+
+        try {
+
+            $categories = DB::table('product_categories as c')
+                ->select(
+                    'c.id',
+                    'c.name',
+                    DB::raw('CONCAT("' . asset('uploads/product-category') . '/", c.icon) AS icon'),
+                    'c.description',
+                    'c.is_popular'
+                )
+                ->where('c.status', 1)
+                ->orderByDesc('c.is_popular')
+                ->get();
+
+            if ($categories->isEmpty()) {
+                return $this->sendError('No category found.', $this->backend_error_status);
+            }
+
+            $subCategories = DB::table('product_subcategories as sc')
+                ->select(
+                    'sc.id',
+                    'sc.product_category_id',
+                    'sc.name',
+                    DB::raw('CONCAT("' . asset('uploads/product-subcategory') . '/", sc.icon) AS icon'),
+                    'sc.description',
+                    'sc.is_popular'
+                )
+                ->where('sc.status', 1)
+                ->get()
+                ->map(function ($item) {
+                    $item->is_popular = (int) $item->is_popular;
+                    return $item;
+                })
+                ->groupBy('product_category_id');
+
+            $categories->transform(function ($category) use ($subCategories) {
+                $category->is_popular = (int) $category->is_popular;
+                $category->subcategories = $subCategories[$category->id] ?? collect();
+                return $category;
+            });
+
+            return $this->sendResponse(
+                $categories,
+                'Categories with subcategories retrieved successfully',
+                $this->success_status
+            );
+
+        } catch (Exception $e) {
+
+            logCatchException($e, $this->controller_name, $function_name);
+
+            return $this->sendError(
+                $this->common_error_message,
+                $this->exception_status
+            );
+        }
+    }
+
+    // public function getProductCategory(): JsonResponse
+    // {
+    //     $function_name = 'getProductCategory';
+    //     try {
+    //         $categories = DB::table('product_categories')->select(
+    //             'id',
+    //             'name',
+    //             DB::raw('CONCAT("' . asset('uploads/product-category') . '/", icon) AS icon'),
+    //             'description',
+    //             'is_popular'
+    //         )
+    //             ->where('status', 1)
+    //             ->orderBy('is_popular', 'desc')
+    //             ->get();
+
+    //         if ($categories->isEmpty()) {
+    //             return $this->sendError('No category found.', $this->backend_error_status);
+    //         }
+
+    //         return $this->sendResponse($categories, 'Categories retrieved successfully', $this->success_status);
+    //     } catch (Exception $e) {
+    //         logCatchException($e, $this->controller_name, $function_name);
+    //         return $this->sendError($this->common_error_message, $this->exception_status);
+    //     }
+    // }
+
+
+    public function getProducts(Request $request): JsonResponse
+    {
+        $function_name = 'getProducts';
+
+        try {
+            $cityId = $request->city_id ?? null;
+
+            if ($cityId) {
+                $query = DB::table('product_city_prices as scp')
+                    ->join('products as s', 'scp.product_id', '=', 's.id')
+                    ->join('product_categories as c', 'scp.category_id', '=', 'c.id')
+                    ->leftJoin('product_subcategories as csc', 'scp.sub_category_id', '=', 'csc.id')
+                    ->where('scp.city_id', $cityId)
+                    ->select(
+                        's.id',
+                        'scp.category_id',
+                        's.sub_category_id',
+                        'c.name as category_name',
+                        'csc.name as sub_category_name',
+                        's.name',
+                        'scp.price',
+                        'scp.discount_price',
+                        's.duration',
+                        's.rating',
+                        's.reviews',
+                        's.description',
+                        's.includes',
+                        DB::raw('CONCAT("' . asset('uploads/product') . '/", s.icon) AS icon'),
+                        's.is_popular'
+                    )
+                    ->where('scp.status', 1);
+            } else {
+                $query = DB::table('products as s')
+                    ->join('product_categories as c', 's.category_id', '=', 'c.id')
+                    ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
+                    ->select(
+                        's.id',
+                        's.category_id',
+                        's.sub_category_id',
+                        'c.name as category_name',
+                        'csc.name as sub_category_name',
+                        's.name',
+                        's.price',
+                        's.discount_price',
+                        's.duration',
+                        's.rating',
+                        's.reviews',
+                        's.description',
+                        's.includes',
+                        DB::raw('CONCAT("' . asset('uploads/product') . '/", s.icon) AS icon'),
+                        's.is_popular'
+                    )
+                    ->where('s.status', 1);
+            }
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('s.name', 'like', "%$search%")
+                        ->orWhere('s.description', 'like', "%$search%")
+                        ->orWhere('c.name', 'like', "%$search%")
+                        ->orWhere('s.duration', 'like', "%$search%")
+                        ->orWhere('s.discount_price', 'like', "%$search%")
+                        ->orWhere('s.price', 'like', "%$search%")
+                        ->orWhere('s.reviews', 'like', "%$search%")
+                        ->orWhere('s.includes', 'like', "%$search%")
+                        ->orWhere('s.rating', 'like', "%$search%");
+                });
+            }
+
+            if ($request->filled('category_id')) {
+                $query->where('s.category_id', $request->category_id);
+            }
+
+            if ($request->filled('sub_category_id')) {
+                $query->where('s.sub_category_id', $request->sub_category_id);
+            }
+
+            $perPage = $request->per_page ?? 24;
+            $page = $request->page ?? 1;
+
+            $products = $query->orderByDesc('s.is_popular')
+                ->paginate($perPage, ['*'], 'page', $page)
+                ->through(function ($product) {
+                    $product->includes = $product->includes ? json_decode($product->includes, true) : [];
+                    return $product;
+                });
+
+            if ($products->total() === 0) {
+                return $this->sendError('No product found.', $this->backend_error_status);
+            }
+
+            return $this->sendResponse(
+                $products,
+                'Products retrieved successfully',
+                $this->success_status
+            );
+        } catch (Exception $e) {
+            logCatchException($e, $this->controller_name, $function_name);
+
+            return $this->sendError(
+                $this->common_error_message,
+                $this->exception_status
+            );
+        }
+    }
+}

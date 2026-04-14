@@ -80,7 +80,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Category</th>
-                                                <th>Service</th>
+                                                <th>Product</th>
                                                 <th>Customer Name</th>
                                                 <th data-stuff="Active,InActive">Status</th>
                                                 <th data-stuff="High Priority,Low Priority">Is Popular</th>
@@ -142,12 +142,12 @@
                     }
                 },
                 {
-                    data: 'service_category_name',
-                    name: 'service_category_name'
+                    data: 'product_category_name',
+                    name: 'product_category_name'
                 },
                 {
-                    data: 'service_name',
-                    name: 'service_name'
+                    data: 'product_name',
+                    name: 'product_name'
                 },
                 {
                     data: 'customer_name',
@@ -195,7 +195,7 @@
                     let data = response.data;
                     let html = `
                         <div class="c-row">
-                            <div class="c-col-6"><div class="c-detail-card"><label>Service</label><p>${data.service_name ?? '-'}</p></div></div>
+                            <div class="c-col-6"><div class="c-detail-card"><label>Product</label><p>${data.product_name ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Customer Name</label><p>${data.customer_name ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Rating</label><p>${data.rating ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Helpful Count</label><p>${data.helpful_count ?? 0}</p></div></div>

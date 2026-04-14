@@ -34,8 +34,8 @@ class ContactSubmissionsController extends Controller
     {
         $function_name = 'view';
         try {
-            $contact = ContactSubmission::leftJoin('services as sc', 'sc.id', '=', 'contact_submissions.service_id')
-                ->select('contact_submissions.*', 'sc.name as service_name')
+            $contact = ContactSubmission::leftJoin('products as sc', 'sc.id', '=', 'contact_submissions.product_id')
+                ->select('contact_submissions.*', 'sc.name as product_name')
                 ->findOrFail($id);
 
             return response()->json(['data' => $contact], 200);
@@ -51,8 +51,8 @@ class ContactSubmissionsController extends Controller
         try {
             if ($request->ajax()) {
                 $contact = ContactSubmission::query()
-                    ->leftJoin('services as sc', 'sc.id', '=', 'contact_submissions.service_id')
-                    ->select('contact_submissions.*', 'sc.name as service_name');
+                    ->leftJoin('products as sc', 'sc.id', '=', 'contact_submissions.product_id')
+                    ->select('contact_submissions.*', 'sc.name as product_name');
 
                 if ($request->status !== null && $request->status !== '') {
                     $contact->where('contact_submissions.status', $request->status);

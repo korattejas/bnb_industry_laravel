@@ -217,7 +217,7 @@
                             <div class="c-col-12 text-center">
                                 <label>Icon</label><br>
                                 ${data.icon 
-                                    ? `<img src="${baseUrl + data.icon}" alt="Blog Icon" class="img-fluid service-icon" style="max-width:250px; cursor:pointer;" onclick="window.open('${baseUrl + data.icon}', '_blank')">`
+                                    ? `<img src="${baseUrl + data.icon}" alt="Blog Icon" class="img-fluid product-icon" style="max-width:250px; cursor:pointer;" onclick="window.open('${baseUrl + data.icon}', '_blank')">`
                                     : '<p>-</p>'
                                 }
                             </div>

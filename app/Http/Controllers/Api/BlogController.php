@@ -107,7 +107,7 @@ class BlogController extends Controller
                 });
 
             if ($blogs->total() === 0) {
-                return $this->sendError('No service found.', $this->backend_error_status);
+                return $this->sendError('No product found.', $this->backend_error_status);
             }
 
             return $this->sendResponse(

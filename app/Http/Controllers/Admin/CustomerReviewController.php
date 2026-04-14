@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerReview;
-use App\Models\Service;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use App\Helpers\ImageUploadHelper;
-use App\Models\ServiceCategory;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\File;
 
 class CustomerReviewController extends Controller
@@ -39,8 +39,8 @@ class CustomerReviewController extends Controller
         $function_name = 'view';
         try {
             $review = CustomerReview::query()
-                ->leftJoin('services as s', 's.id', '=', 'customer_reviews.service_id')
-                ->select('customer_reviews.*', 's.name as service_name')
+                ->leftJoin('products as s', 's.id', '=', 'customer_reviews.product_id')
+                ->select('customer_reviews.*', 's.name as product_name')
                 ->where('customer_reviews.id', $id)
                 ->first();
 
@@ -59,9 +59,9 @@ class CustomerReviewController extends Controller
     public function create()
     {
         try {
-            $services = Service::where('status', 1)->select('id', 'name')->get();
-            $categories = ServiceCategory::where('status', 1)->select('id', 'name')->get();
-            return view('admin.reviews.create', compact('services','categories'));
+            $products = Product::where('status', 1)->select('id', 'name')->get();
+            $categories = ProductCategory::where('status', 1)->select('id', 'name')->get();
+            return view('admin.reviews.create', compact('products','categories'));
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, 'create');
             return response()->json(['error' => $this->error_message], $this->exception_error_code);
@@ -72,10 +72,10 @@ class CustomerReviewController extends Controller
     {
         try {
             $review = CustomerReview::findOrFail(decryptId($id));
-            $services = Service::where('status', 1)->select('id', 'name')->get();
-            $categories = ServiceCategory::where('status', 1)->select('id', 'name')->get();
+            $products = Product::where('status', 1)->select('id', 'name')->get();
+            $categories = ProductCategory::where('status', 1)->select('id', 'name')->get();
 
-            return view('admin.reviews.edit', compact('review', 'services', 'categories'));
+            return view('admin.reviews.edit', compact('review', 'products', 'categories'));
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, 'edit');
             return response()->json(['error' => $this->error_message], $this->exception_error_code);
@@ -87,9 +87,9 @@ class CustomerReviewController extends Controller
         try {
             if ($request->ajax()) {
                 $reviews = CustomerReview::query()
-                    ->leftJoin('services as s', 's.id', '=', 'customer_reviews.service_id')
-                    ->leftJoin('service_categories as sc', 'sc.id', '=', 'customer_reviews.category_id')
-                    ->select('customer_reviews.*', 's.name as service_name', 'sc.name as service_category_name');
+                    ->leftJoin('products as s', 's.id', '=', 'customer_reviews.product_id')
+                    ->leftJoin('product_categories as sc', 'sc.id', '=', 'customer_reviews.category_id')
+                    ->select('customer_reviews.*', 's.name as product_name', 'sc.name as product_category_name');
 
                 if ($request->status !== null && $request->status !== '') {
                     $reviews->where('customer_reviews.status', $request->status);
@@ -150,8 +150,8 @@ class CustomerReviewController extends Controller
 
         try {
             $rules = [
-                'category_id'    => 'required|exists:service_categories,id',
-                'service_id'    => 'required|exists:services,id',
+                'category_id'    => 'required|exists:product_categories,id',
+                'product_id'    => 'required|exists:products,id',
                 'customer_name' => 'required|string|max:100',
                 'customer_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'rating'        => 'nullable|numeric|min:0|max:5',
@@ -213,7 +213,7 @@ class CustomerReviewController extends Controller
 
             $data = [
                 'category_id'     => $request->category_id,
-                'service_id'     => $request->service_id,
+                'product_id'     => $request->product_id,
                 'customer_name'  => $request->customer_name,
                 'customer_photo' => $photo,
                 'rating'         => $request->rating,

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceCategory;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -53,7 +53,7 @@ class SettingController extends Controller
             ];
 
             $heroContent = [
-                'title' => "Trusted Beauty Service at Your Doorstep",
+                'title' => "Trusted Beauty Product at Your Doorstep",
                 'description' => "Experience premium beauty treatments from head to toe — hair, skin, nails, waxing, facials, spa therapies, and more, all delivered by expert professionals at your doorstep.",
                 'badges' => [
                     "Home",

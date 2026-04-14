@@ -12,11 +12,9 @@ use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Twilio\Rest\Client;
 use Exception;
-use App\Models\Service;
-use App\Models\Appointment;
-use App\Models\ServiceCategory;
-use App\Models\ServiceSubcategory;
-use App\Models\City;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductSubcategory;
 
 class AuthenticationController extends Controller
 {
@@ -290,9 +288,9 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function getTotalBookService(Request $request): JsonResponse
+    public function getTotalBookProduct(Request $request): JsonResponse
     {
-        $function_name = 'getTotalBookService';
+        $function_name = 'getTotalBookProduct';
 
         try {
             $validator = Validator::make($request->all(), [
@@ -320,13 +318,12 @@ class AuthenticationController extends Controller
                 return $this->sendError('User not found or not verified.', 404);
             }
 
-            $appointments = Appointment::leftJoin('cities as ct', 'ct.id', '=', 'appointments.city_id')
                 ->select(
                     'appointments.id',
                     'appointments.order_number',
                     'appointments.appointment_date',
                     'appointments.appointment_time',
-                    'appointments.service_id',
+                    'appointments.product_id',
                     'ct.name as city_name'
                 )
                 ->where('appointments.phone', $mobile_number)
@@ -338,8 +335,8 @@ class AuthenticationController extends Controller
             }
 
             $data = $appointments->map(function ($appointment) {
-                $serviceIds = $appointment->service_id ? explode(',', $appointment->service_id) : [];
-                $totalServices = count(array_filter($serviceIds));
+                $productIds = $appointment->product_id ? explode(',', $appointment->product_id) : [];
+                $totalProducts = count(array_filter($productIds));
 
                 return [
                     'id'                => $appointment->id,
@@ -347,7 +344,7 @@ class AuthenticationController extends Controller
                     'appointment_date'  => $appointment->appointment_date,
                     'appointment_time'  => $appointment->appointment_time,
                     'city_name'         => $appointment->city_name,
-                    'total_services'    => $totalServices,
+                    'total_products'    => $totalProducts,
                 ];
             });
 
@@ -359,9 +356,9 @@ class AuthenticationController extends Controller
     }
 
 
-    public function getBookServiceDetails(Request $request): JsonResponse
+    public function getBookProductDetails(Request $request): JsonResponse
     {
-        $function_name = 'getBookServiceDetails';
+        $function_name = 'getBookProductDetails';
 
         try {
             $validator = Validator::make($request->all(), [
@@ -373,7 +370,6 @@ class AuthenticationController extends Controller
             ], [
                 'mobile_number.required' => 'Mobile number is required.',
                 'mobile_number.regex' => 'Enter a valid international mobile number with country code.',
-                'appointment_id.required' => 'Appointment ID is required.',
             ]);
 
             if ($validator->fails()) {
@@ -392,32 +388,30 @@ class AuthenticationController extends Controller
                 return $this->sendError('User not found or not verified.', 404);
             }
 
-            $appointment = Appointment::leftJoin('service_categories as sc', 'sc.id', '=', 'appointments.service_category_id')
-                ->leftJoin('service_subcategories as ssc', 'ssc.id', '=', 'appointments.service_sub_category_id')
+                ->leftJoin('product_subcategories as ssc', 'ssc.id', '=', 'appointments.product_sub_category_id')
                 ->leftJoin('cities as ct', 'ct.id', '=', 'appointments.city_id')
                 ->select(
                     'appointments.*',
-                    'sc.name as service_category_name',
-                    'ssc.name as service_sub_category_name',
+                    'sc.name as product_category_name',
+                    'ssc.name as product_sub_category_name',
                     'ct.name as city_name',
                 )
                 ->where('appointments.id', $appointmentId)
                 ->first();
 
             if (!$appointment) {
-                return $this->sendError('Appointment not found.', 404);
             }
 
-            $serviceIds = $appointment->service_id ? explode(',', $appointment->service_id) : [];
-            $serviceIds = array_map('intval', $serviceIds);
-            $services = Service::whereIn('id', $serviceIds)->pluck('name')->toArray();
+            $productIds = $appointment->product_id ? explode(',', $appointment->product_id) : [];
+            $productIds = array_map('intval', $productIds);
+            $products = Product::whereIn('id', $productIds)->pluck('name')->toArray();
 
             $data = [
                 'id'                     => $appointment->id,
                 'order_number'           => $appointment->order_number,
                 'price'                  => $appointment->price,
                 'discount_price'         => $appointment->discount_price,
-                'service_address'        => $appointment->service_address,
+                'product_address'        => $appointment->product_address,
                 'appointment_date'       => $appointment->appointment_date,
                 'appointment_time'       => $appointment->appointment_time,
                 'special_notes'          => $appointment->special_notes,
@@ -425,7 +419,7 @@ class AuthenticationController extends Controller
                 'created_at'             => $appointment->created_at,
                 'updated_at'             => $appointment->updated_at,
                 'city_name'              => $appointment->city_name,
-                'services'               => $services,
+                'products'               => $products,
             ];
 
             return $this->sendResponse($data, 'Booking details fetched successfully.', $this->success_status);

@@ -9,21 +9,21 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ServiceCityPricesExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
+class ProductCityPricesExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
 {
     public function collection()
     {
-        return DB::table('service_city_prices as scp')
-            ->leftJoin('services as s', 's.id', '=', 'scp.service_id')
+        return DB::table('product_city_prices as scp')
+            ->leftJoin('products as s', 's.id', '=', 'scp.product_id')
             ->leftJoin('cities as c', 'c.id', '=', 'scp.city_id')
-            ->leftJoin('service_categories as sc', 'sc.id', '=', 'scp.category_id')
-            ->leftJoin('service_subcategories as ssc', 'ssc.id', '=', 'scp.sub_category_id')
+            ->leftJoin('product_categories as sc', 'sc.id', '=', 'scp.category_id')
+            ->leftJoin('product_subcategories as ssc', 'ssc.id', '=', 'scp.sub_category_id')
             ->select(
                 'scp.id',
                 'c.name as city_name',
                 'sc.name as category_name',
                 'ssc.name as sub_category_name',
-                's.name as service_name',
+                's.name as product_name',
                 'scp.price',
                 'scp.discount_price',
                 'scp.status',
@@ -41,7 +41,7 @@ class ServiceCityPricesExport implements FromCollection, WithHeadings, WithStyle
                     'City'           => $row->city_name,
                     'Category'       => $row->category_name,
                     'Sub Category'       => $row->sub_category_name,
-                    'Service Name'   => $row->service_name,
+                    'Product Name'   => $row->product_name,
                     'Price'          => $row->price ?? 0,
                     'Discount Price' => $row->discount_price ?? 0,
                     // 'Final Price'    => number_format($finalPrice, 2),
@@ -59,7 +59,7 @@ class ServiceCityPricesExport implements FromCollection, WithHeadings, WithStyle
             'City',
             'Category',
             'Sub Category',
-            'Service Name',
+            'Product Name',
             'Price',
             'Discount Price',
             // 'Final Price',
