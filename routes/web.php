@@ -3,14 +3,14 @@
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ContactSubmissionsController;
-use App\Http\Controllers\Admin\CustomerReviewController;
+// use App\Http\Controllers\Admin\CustomerReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FaqController;
 // use App\Http\Controllers\Admin\HiringController;
 use App\Http\Controllers\Admin\HomeCounterController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PoliciesController;
-use App\Http\Controllers\Admin\PortfolioController;
+// use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductSubcategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -62,7 +62,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('product-subcategory/priority-status/{id}/{status}', [ProductSubcategoryController::class, 'changePriorityStatus']);
 
 
-         /* Portfoio */
+        /* Portfoio 
         Route::get('portfolio', [PortfolioController::class, 'index'])->name('admin.portfolio.index');
         Route::get('portfolio/create', [PortfolioController::class, 'create'])->name('admin.portfolio.create');
         Route::post('portfolio/store', [PortfolioController::class, 'store'])->name('admin.portfolio.store');
@@ -71,7 +71,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('getDataPortfolio', [PortfolioController::class, 'getDataPortfolio'])->name('getDataPortfolio');
         Route::get('portfolio/status/{id}/{status}', [PortfolioController::class, 'changeStatus'])->name('admin.portfolio.changeStatus');
         Route::post('portfolio/remove-image', [PortfolioController::class, 'removeImage'])->name('admin.portfolio.removeImage');
-
+        */
     
 
         /* Blog Category Route */
@@ -105,6 +105,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+        /* 
         // Customer Reviews
         Route::get('reviews', [CustomerReviewController::class, 'index'])->name('admin.reviews.index');
         Route::get('reviews/create', [CustomerReviewController::class, 'create'])->name('admin.reviews.create');
@@ -115,6 +116,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('reviews/status/{id}/{status}', [CustomerReviewController::class, 'changeStatus'])->name('admin.reviews.changeStatus');
         Route::get('reviews/priority-status/{id}/{status}', [CustomerReviewController::class, 'changePopularStatus'])->name('admin.reviews.changePopularStatus');
         Route::get('reviews-view/{id}', [CustomerReviewController::class, 'view']);
+        */
 
         // Blogs
         Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs.index');

@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BlogController;
-use App\Http\Controllers\Api\CustomerReviewController;
+// use App\Http\Controllers\Api\CustomerReviewController;
 // use App\Http\Controllers\Api\HiringController;
 use App\Http\Controllers\Api\HomeCounterController;
 use App\Http\Controllers\Api\FaqsController;
@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ContactSubmissionsController;
 use App\Http\Controllers\Api\User\AuthenticationController;
 use App\Http\Controllers\Api\PoliciesController;
-use App\Http\Controllers\Api\PortfolioController;
+// use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Middleware\RequestModifier;
 use App\Http\Middleware\ResponseModifier;
 use App\Http\Middleware\SanitizeInput;
@@ -26,13 +26,6 @@ Route::get('/user', function (Request $request) {
 
 
 /*======================================================== Customer API ==============================================*/
-
-Route::middleware([RequestModifier::class, ResponseModifier::class, SanitizeInput::class])->group(function () {
-    Route::prefix('V1/customer')->group(function () {
-        Route::post('sendOtpOnMobileNumber', [AuthenticationController::class, 'sendOtpOnMobileNumber']);
-        Route::post('verifyOtpOnMobileNumber', [AuthenticationController::class, 'verifyOtpOnMobileNumber']);
-    });
-});
 
 
 Route::middleware([JWTTokenMiddleware::class, RequestModifier::class, ResponseModifier::class, SanitizeInput::class])->group(function () {
@@ -56,25 +49,19 @@ Route::middleware([RequestModifier::class, ResponseModifier::class, SanitizeInpu
         Route::get('blogCategory', [BlogController::class, 'getBlogCategory']);
         Route::post('blogs', [BlogController::class, 'getBlogs']);
         Route::post('blogView', [BlogController::class, 'blogView']);
-        Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
+//         Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
         // Route::post('hiring', [HiringController::class, 'getHiring']);
         Route::get('homeCounter', [HomeCounterController::class, 'getHomeCounter']);
         Route::get('faqs', [FaqsController::class, 'getFaqs']);
         Route::get('settings', [SettingController::class, 'getsettings']);
         Route::post('contactFormSubmit', [ContactSubmissionsController::class, 'contactFormSubmit']);
         Route::post('policies', [PoliciesController::class, 'getPolicies']);
-        Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
+//         Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
     });
 });
 
 /*======================================================== Debug API ==============================================*/
 
-Route::middleware([])->group(function () {
-    Route::prefix('Test/V1/customer')->group(function () {
-        Route::post('sendOtpOnMobileNumber', [AuthenticationController::class, 'sendOtpOnMobileNumber']);
-        Route::post('verifyOtpOnMobileNumber', [AuthenticationController::class, 'verifyOtpOnMobileNumber']);
-    });
-});
 
 Route::middleware([JWTTokenMiddleware::class])->group(function () {
     Route::prefix('Test/V1/customer')->group(function () {
@@ -93,13 +80,13 @@ Route::middleware([])->group(function () {
         Route::get('blogCategory', [BlogController::class, 'getBlogCategory']);
         Route::post('blogs', [BlogController::class, 'getBlogs']);
         Route::post('blogView', [BlogController::class, 'blogView']);
-        Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
+//         Route::post('customerReview', [CustomerReviewController::class, 'getCustomerReviews']);
         // Route::post('hiring', [HiringController::class, 'getHiring']);
         Route::get('homeCounter', [HomeCounterController::class, 'getHomeCounter']);
         Route::get('faqs', [FaqsController::class, 'getFaqs']);
         Route::get('settings', [SettingController::class, 'getsettings']);
         Route::post('contactFormSubmit', [ContactSubmissionsController::class, 'contactFormSubmit']);
         Route::post('policies', [PoliciesController::class, 'getPolicies']);
-        Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
+//         Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
     });
 });

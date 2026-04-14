@@ -28,9 +28,7 @@ class ProductController extends Controller
     public function getProductCategory(): JsonResponse
     {
         $function_name = 'getProductCategory';
-
         try {
-
             $categories = DB::table('product_categories as c')
                 ->select(
                     'c.id',
@@ -87,87 +85,87 @@ class ProductController extends Controller
         }
     }
 
-    // public function getProductCategory(): JsonResponse
-    // {
-    //     $function_name = 'getProductCategory';
-    //     try {
-    //         $categories = DB::table('product_categories')->select(
-    //             'id',
-    //             'name',
-    //             DB::raw('CONCAT("' . asset('uploads/product-category') . '/", icon) AS icon'),
-    //             'description',
-    //             'is_popular'
-    //         )
-    //             ->where('status', 1)
-    //             ->orderBy('is_popular', 'desc')
-    //             ->get();
-
-    //         if ($categories->isEmpty()) {
-    //             return $this->sendError('No category found.', $this->backend_error_status);
-    //         }
-
-    //         return $this->sendResponse($categories, 'Categories retrieved successfully', $this->success_status);
-    //     } catch (Exception $e) {
-    //         logCatchException($e, $this->controller_name, $function_name);
-    //         return $this->sendError($this->common_error_message, $this->exception_status);
-    //     }
-    // }
-
 
     public function getProducts(Request $request): JsonResponse
     {
         $function_name = 'getProducts';
 
         try {
-            $cityId = $request->city_id ?? null;
+            // Updated selection fields (removed deleted fields: duration, rating, reviews and changed icon to images)
+            $selectFields = [
+                's.id',
+                's.category_id',
+                's.sub_category_id',
+                'c.name as category_name',
+                'csc.name as sub_category_name',
+                's.name',
+                's.price',
+                's.discount_price',
+                's.description',
+                's.includes',
+                's.images',
+                's.is_popular'
+            ];
 
-            if ($cityId) {
-                $query = DB::table('product_city_prices as scp')
-                    ->join('products as s', 'scp.product_id', '=', 's.id')
-                    ->join('product_categories as c', 'scp.category_id', '=', 'c.id')
-                    ->leftJoin('product_subcategories as csc', 'scp.sub_category_id', '=', 'csc.id')
-                    ->where('scp.city_id', $cityId)
-                    ->select(
-                        's.id',
-                        'scp.category_id',
-                        's.sub_category_id',
-                        'c.name as category_name',
-                        'csc.name as sub_category_name',
-                        's.name',
-                        'scp.price',
-                        'scp.discount_price',
-                        's.duration',
-                        's.rating',
-                        's.reviews',
-                        's.description',
-                        's.includes',
-                        DB::raw('CONCAT("' . asset('uploads/product') . '/", s.icon) AS icon'),
-                        's.is_popular'
-                    )
-                    ->where('scp.status', 1);
-            } else {
-                $query = DB::table('products as s')
+            // 1. If product_id is provided, show single product details and related products from same category
+            if ($request->filled('product_id')) {
+                $product = DB::table('products as s')
                     ->join('product_categories as c', 's.category_id', '=', 'c.id')
                     ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
-                    ->select(
-                        's.id',
-                        's.category_id',
-                        's.sub_category_id',
-                        'c.name as category_name',
-                        'csc.name as sub_category_name',
-                        's.name',
-                        's.price',
-                        's.discount_price',
-                        's.duration',
-                        's.rating',
-                        's.reviews',
-                        's.description',
-                        's.includes',
-                        DB::raw('CONCAT("' . asset('uploads/product') . '/", s.icon) AS icon'),
-                        's.is_popular'
-                    )
-                    ->where('s.status', 1);
+                    ->select($selectFields)
+                    ->where('s.id', $request->product_id)
+                    ->where('s.status', 1)
+                    ->first();
+
+                if (!$product) {
+                    return $this->sendError('Product not found.', $this->backend_error_status);
+                }
+
+                // Process includes and images for the single product
+                $product->includes = $product->includes ? json_decode($product->includes, true) : [];
+                $productImages = $product->images ? json_decode($product->images, true) : [];
+                $product->images = array_map(function ($img) {
+                    return asset('uploads/product/' . $img);
+                }, (array)$productImages);
+                $product->is_popular = (int) $product->is_popular;
+
+                // 2. Fetch Related Products from same category (excluding current product)
+                $relatedProducts = DB::table('products as s')
+                    ->join('product_categories as c', 's.category_id', '=', 'c.id')
+                    ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
+                    ->select($selectFields)
+                    ->where('s.category_id', $product->category_id)
+                    ->where('s.id', '!=', $product->id)
+                    ->where('s.status', 1)
+                    ->orderByDesc('s.is_popular')
+                    ->limit(10)
+                    ->get()
+                    ->map(function ($item) {
+                        $item->includes = $item->includes ? json_decode($item->includes, true) : [];
+                        $itemImages = $item->images ? json_decode($item->images, true) : [];
+                        $item->images = array_map(function ($img) {
+                            return asset('uploads/product/' . $img);
+                        }, (array)$itemImages);
+                        $item->is_popular = (int) $item->is_popular;
+                        return $item;
+                    });
+
+                return $this->sendResponse(
+                    [
+                        'product_details' => $product,
+                        'related_products' => $relatedProducts
+                    ],
+                    'Product details retrieved successfully',
+                    $this->success_status
+                );
             }
+
+            // 3. Normal products listing (with filters and search)
+            $query = DB::table('products as s')
+                ->join('product_categories as c', 's.category_id', '=', 'c.id')
+                ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
+                ->select($selectFields)
+                ->where('s.status', 1);
 
             if ($request->filled('search')) {
                 $search = $request->search;
@@ -175,12 +173,9 @@ class ProductController extends Controller
                     $q->where('s.name', 'like', "%$search%")
                         ->orWhere('s.description', 'like', "%$search%")
                         ->orWhere('c.name', 'like', "%$search%")
-                        ->orWhere('s.duration', 'like', "%$search%")
                         ->orWhere('s.discount_price', 'like', "%$search%")
                         ->orWhere('s.price', 'like', "%$search%")
-                        ->orWhere('s.reviews', 'like', "%$search%")
-                        ->orWhere('s.includes', 'like', "%$search%")
-                        ->orWhere('s.rating', 'like', "%$search%");
+                        ->orWhere('s.includes', 'like', "%$search%");
                 });
             }
 
@@ -199,6 +194,11 @@ class ProductController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($product) {
                     $product->includes = $product->includes ? json_decode($product->includes, true) : [];
+                    $productImages = $product->images ? json_decode($product->images, true) : [];
+                    $product->images = array_map(function ($img) {
+                        return asset('uploads/product/' . $img);
+                    }, (array)$productImages);
+                    $product->is_popular = (int) $product->is_popular;
                     return $product;
                 });
 

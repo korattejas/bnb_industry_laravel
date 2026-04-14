@@ -12,6 +12,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
+/*
 class PortfolioController extends Controller
 {
     protected $error_message, $exception_error_code, $validator_error_code, $controller_name;
@@ -301,3 +302,4 @@ class PortfolioController extends Controller
         }
     }
 }
+*/

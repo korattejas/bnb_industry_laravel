@@ -212,6 +212,7 @@
                         <div class="stat-label">Active Products</div>
                     </a>
  
+{{-- 
                     <!-- Reviews -->
                     <a href="{{ route('admin.reviews.index') }}" class="stat-card-luxury card-reviews">
                         <div class="stat-icon-wrapper">
@@ -220,6 +221,7 @@
                         <div class="stat-value">{{ $totalCustomerReviews }}</div>
                         <div class="stat-label">Member Reviews</div>
                     </a>
+--}}
                 </div>
  
                 <!-- Content Management Group -->

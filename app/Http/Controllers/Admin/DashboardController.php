@@ -7,7 +7,7 @@ use App\Models\ProductCategory;
 use App\Models\Product;
 use App\Models\Blog;
 use App\Models\BlogCategory;
-use App\Models\CustomerReview;
+// use App\Models\CustomerReview;
 use App\Models\ContactSubmission;
 // use App\Models\Hiring;
  
@@ -36,7 +36,7 @@ class DashboardController extends Controller
             $totalBlogs = Blog::where('status', 1)->count();
             $totalBlogCategory = BlogCategory::where('status', 1)->count();
 // $totalHirings = Hiring::where('status', 1)->count();
-            $totalCustomerReviews = CustomerReview::where('status', 1)->count();
+// $totalCustomerReviews = CustomerReview::where('status', 1)->count();
  
             return view('admin.dashboard.index', [
                 'totalContacts'          => $totalContacts,
@@ -45,7 +45,7 @@ class DashboardController extends Controller
                 'totalBlogs'             => $totalBlogs,
                 'totalBlogCategory'      => $totalBlogCategory,
 // 'totalHirings'           => $totalHirings,
-                'totalCustomerReviews'   => $totalCustomerReviews,
+// 'totalCustomerReviews'   => $totalCustomerReviews,
             ]);
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, $function_name);

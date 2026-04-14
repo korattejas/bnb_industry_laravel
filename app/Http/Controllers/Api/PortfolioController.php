@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
+/*
 class PortfolioController extends Controller
 {
     protected mixed $success_status, $exception_status, $backend_error_status, $validation_error_status, $common_error_message;
@@ -78,3 +79,4 @@ class PortfolioController extends Controller
         }
     }
 }
+*/
