@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
     <title>Bnb Industry | Precision Admin Access</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('panel-assets/admin-logo/logo.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('panel-assets/admin-logo/sidebar-logo.png') }}">
 
     <!-- Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
