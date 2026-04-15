@@ -1,4 +1,41 @@
 @extends('admin.layouts.app')
+
+@section('header_style_content')
+<style>
+    :root {
+        --mst-indigo: #102365;
+        --mst-indigo-light: #f5f7ff;
+        --mst-text-main: #1e293b;
+        --mst-text-muted: #64748b;
+        --mst-bg-body: #f8fafc;
+        --mst-border: #e2e8f0;
+    }
+
+    .upload-zone {
+        background: #f1f5f9;
+        border-radius: 16px;
+        border: 2px dashed #cbd5e1;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .upload-zone:hover {
+        border-color: var(--mst-indigo);
+        background: #ecf1f6;
+    }
+
+    .form-label-luxury {
+        font-weight: 700;
+        color: var(--mst-text-main);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="app-content content">
         <div class="content-overlay"></div>
@@ -41,7 +78,7 @@
 
                                         <div class="row row-sm">
                                             <!-- Category -->
-                                            <div class="col-6 mt-2">
+                                            <div class="col-12 mt-2">
                                                 <div class="form-group">
                                                     <label>Category</label>
                                                     <select name="category_id" class="form-control select2"
@@ -55,6 +92,7 @@
                                                 </div>
                                             </div>
 
+                                            {{-- 
                                             <!-- Sub Category -->
                                             <div class="col-6 mt-2">
                                                 <div class="form-group">
@@ -65,6 +103,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            --}}
 
                                             <!-- Name -->
                                             <div class="col-12 mt-2">
@@ -76,7 +115,7 @@
                                             </div>
 
                                             <!-- Price -->
-                                            <div class="col-6 mt-2">
+                                            <div class="col-12 mt-2">
                                                 <div class="form-group">
                                                     <label>Price</label>
                                                     <input type="text" class="form-control" name="price"
@@ -84,6 +123,7 @@
                                                 </div>
                                             </div>
 
+                                            {{-- 
                                             <!-- Discount Price -->
                                             <div class="col-6 mt-2">
                                                 <div class="form-group">
@@ -92,6 +132,7 @@
                                                         name="discount_price" placeholder="Discount Price">
                                                 </div>
                                             </div>
+                                            --}}
 
 
 
@@ -112,10 +153,21 @@
                                             </div>
 
                                             <!-- Images -->
-                                            <div class="col-12 mt-2">
-                                                <div class="form-group">
-                                                    <label>Images</label>
-                                                    <input type="file" class="form-control filepond" name="images[]" multiple data-allow-reorder="true">
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">Product Gallery Collection</label>
+                                                
+                                                <div class="upload-zone p-5 text-center">
+                                                    <i class="bi bi-cloud-arrow-up-fill mb-3" style="font-size: 3rem; color: var(--mst-indigo);"></i>
+                                                    <h5 class="mb-3">Drag & Drop product photos here</h5>
+                                                    <p class="text-muted mb-4 small">Or click to browse from your device</p>
+                                                    
+                                                    <input type="file" class="form-control" name="photos[]" multiple accept="image/*">
+                                                    
+                                                    <div class="mt-4">
+                                                        <span class="badge bg-light text-dark border p-2">
+                                                            <i class="bi bi-info-circle me-1"></i> You can select multiple images at once
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
 

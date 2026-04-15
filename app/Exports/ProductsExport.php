@@ -14,14 +14,11 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
     public function collection()
     {
         return Product::leftJoin('product_categories as sc', 'sc.id', '=', 'products.category_id')
-            ->leftJoin('product_subcategories as ssc', 'ssc.id', '=', 'products.sub_category_id')
             ->select(
                 'products.id',
                 'sc.name as category_name',
-                'ssc.name as sub_category_name',
                 'products.name',
                 'products.price',
-                'products.discount_price',
 
                 'products.description',
                 'products.includes',
@@ -38,12 +35,8 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
                 return [
                     'ID'            => $row->id,
                     'Category'      => $row->category_name,
-                    'Sub Category'      => $row->sub_category_name,
                     'Name'          => $row->name,
                     'Price'         => $row->price ?? 0,
-                    'Discount Price' => $row->discount_price ?? 0,
-                    // 'Total Price'   => number_format($total, 2),
-                    // 'Discount %'    => $percent . '%',
 
                     'Description'   => $row->description,
                     'Includes'      => $row->includes ? implode(', ', json_decode($row->includes, true)) : '-',
@@ -58,12 +51,8 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
         return [
             'ID',
             'Category',
-            'Sub Category',
             'Name',
             'Price',
-            'Discount Price',
-            // 'Total Price',
-            // 'Discount %',
 
             'Description',
             'Includes',

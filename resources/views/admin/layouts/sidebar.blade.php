@@ -182,17 +182,6 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ Request::routeIs('admin.product-subcategory.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.product-subcategory.index') }}">
-                    <i data-feather="layers"></i>
-                    <span class="menu-title text-truncate">Sub Categories</span>
-                </a>
-            </li>
-
-
-
-
-
             <li class=" navigation-header">
                 <span>Communication</span>
             </li>
@@ -204,28 +193,35 @@
                 </a>
             </li>
 
-            <!-- <li class="nav-item {{ Request::routeIs('admin.reviews.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.reviews.index') }}">
-                    <i data-feather="star"></i>
-                    <span class="menu-title text-truncate">Reviews</span>
-                </a>
-            </li> -->
-
             <li class=" navigation-header">
                 <span>Content</span>
             </li>
 
-            <!-- <li class="nav-item {{ Request::routeIs('admin.portfolio.index') ? 'active' : '' }}">
-                <a class="d-flex align-items-center" href="{{ route('admin.portfolio.index') }}">
-                    <i data-feather="image"></i>
-                    <span class="menu-title text-truncate">Portfolio</span>
+            <li class="nav-item {{ Request::routeIs('admin.blog-category.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.blog-category.index') }}">
+                    <i data-feather="list"></i>
+                    <span class="menu-title text-truncate">Blog Categories</span>
                 </a>
-            </li> -->
+            </li>
 
             <li class="nav-item {{ Request::routeIs('admin.blogs.index') ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('admin.blogs.index') }}">
                     <i data-feather="edit"></i>
                     <span class="menu-title text-truncate">Blog Posts</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::routeIs('admin.faqs.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.faqs.index') }}">
+                    <i data-feather="help-circle"></i>
+                    <span class="menu-title text-truncate">FAQs</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::routeIs('admin.policies.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.policies.index') }}">
+                    <i data-feather="shield"></i>
+                    <span class="menu-title text-truncate">Policies</span>
                 </a>
             </li>
 

@@ -94,8 +94,7 @@ class ProductController extends Controller
             if ($request->ajax()) {
                 $products = Product::query()
                     ->leftJoin('product_categories as sc', 'sc.id', '=', 'products.category_id')
-                    ->leftJoin('product_subcategories as ssc', 'ssc.id', '=', 'products.sub_category_id')
-                    ->select('products.*', 'sc.name as category_name', 'ssc.name as sub_category_name');
+                    ->select('products.*', 'sc.name as category_name');
 
                 if ($request->status !== null && $request->status !== '') {
                     $products->where('products.status', $request->status);
@@ -173,13 +172,13 @@ class ProductController extends Controller
 
             $validateArray = [
                 'category_id' => 'required|exists:product_categories,id',
-                'sub_category_id' => 'nullable|exists:product_subcategories,id',
+                'sub_category_id' => 'nullable',
                 'name'        => 'required',
                 // 'price'       => 'required|numeric|min:0',
                 // 'discount_price' => 'nullable|numeric|min:0',
                 'description' => 'required|string',
-                'images'   => 'nullable|array',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp',
+                'photos'   => 'nullable|array',
+                'photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp',
             ];
 
             $validator = Validator::make($request_all, $validateArray);
@@ -198,8 +197,8 @@ class ProductController extends Controller
                 }
             }
 
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $image) {
                     $filename = ImageUploadHelper::productimageUpload($image);
                     $storedImages[] = $filename;
                 }
@@ -217,10 +216,8 @@ class ProductController extends Controller
 
             $data = [
                 'category_id' => $request->category_id,
-                'sub_category_id' => $request->sub_category_id,
                 'name'        => $request->name,
                 'price'       => $request->price,
-                'discount_price' => $request->discount_price,
                 'description' => $request->description,
                 'includes'    => $includes,
                 'images'      => !empty($storedImages) ? $storedImages : null,

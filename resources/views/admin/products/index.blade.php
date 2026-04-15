@@ -83,11 +83,9 @@
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Category</th>
-                                                <th>Sub Category</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
                                                 <th>Price</th>
-                                                <th>Discount Price</th>
                                                 {{-- <th>TP</th> --}}
                                                 {{-- <th>PP</th> --}}
                                                 <th data-stuff="Active,InActive">Status</th>
@@ -211,10 +209,6 @@
                     name: 'category_name'
                 },
                 {
-                    data: 'sub_category_name',
-                    name: 'sub_category_name'
-                },
-                {
                     data: 'name',
                     name: 'name'
                 },
@@ -227,10 +221,6 @@
                 {
                     data: 'price',
                     name: 'price'
-                },
-                {
-                    data: 'discount_price',
-                    name: 'discount_price'
                 },
                 // {
                 //     data: null,
@@ -303,10 +293,9 @@
                     let html = `
                         <div class="c-row">
                             <div class="c-col-6"><div class="c-detail-card"><label>Category</label><p>${data.category_name ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Sub Category</label><p>${data.sub_category_name ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Name</label><p>${data.name ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Price</label><p>${data.price ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Discount Price</label><p>${data.discount_price ?? '-'}</p></div></div>
+
 
                             <div class="c-col-12"><div class="c-detail-card"><label>Description</label><p>${data.description ?? '-'}</p></div></div>
                             <div class="c-col-12"><div class="c-detail-card"><label>Includes</label><p>${

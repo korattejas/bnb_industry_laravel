@@ -1,6 +1,6 @@
 <!-- App Icons -->
-<link rel="apple-touch-icon" href="{{ asset('panel-assets/admin-logo/logo.png') }}">
-<link rel="shortcut icon" type="image/x-icon" href="{{ asset('panel-assets/admin-logo/logo.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('panel-assets/admin-logo/sidebar-logo.png') }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{ asset('panel-assets/admin-logo/sidebar-logo.png') }}">
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">

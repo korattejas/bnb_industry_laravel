@@ -45,26 +45,8 @@ class ProductController extends Controller
                 return $this->sendError('No category found.', $this->backend_error_status);
             }
 
-            $subCategories = DB::table('product_subcategories as sc')
-                ->select(
-                    'sc.id',
-                    'sc.product_category_id',
-                    'sc.name',
-                    DB::raw('CONCAT("' . asset('uploads/product-subcategory') . '/", sc.icon) AS icon'),
-                    'sc.description',
-                    'sc.is_popular'
-                )
-                ->where('sc.status', 1)
-                ->get()
-                ->map(function ($item) {
-                    $item->is_popular = (int) $item->is_popular;
-                    return $item;
-                })
-                ->groupBy('product_category_id');
-
-            $categories->transform(function ($category) use ($subCategories) {
+            $categories->transform(function ($category) {
                 $category->is_popular = (int) $category->is_popular;
-                $category->subcategories = $subCategories[$category->id] ?? collect();
                 return $category;
             });
 
@@ -95,12 +77,9 @@ class ProductController extends Controller
             $selectFields = [
                 's.id',
                 's.category_id',
-                's.sub_category_id',
                 'c.name as category_name',
-                'csc.name as sub_category_name',
                 's.name',
                 's.price',
-                's.discount_price',
                 's.description',
                 's.includes',
                 's.images',
@@ -111,7 +90,6 @@ class ProductController extends Controller
             if ($request->filled('product_id')) {
                 $product = DB::table('products as s')
                     ->join('product_categories as c', 's.category_id', '=', 'c.id')
-                    ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
                     ->select($selectFields)
                     ->where('s.id', $request->product_id)
                     ->where('s.status', 1)
@@ -132,7 +110,6 @@ class ProductController extends Controller
                 // 2. Fetch Related Products from same category (excluding current product)
                 $relatedProducts = DB::table('products as s')
                     ->join('product_categories as c', 's.category_id', '=', 'c.id')
-                    ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
                     ->select($selectFields)
                     ->where('s.category_id', $product->category_id)
                     ->where('s.id', '!=', $product->id)
@@ -163,7 +140,6 @@ class ProductController extends Controller
             // 3. Normal products listing (with filters and search)
             $query = DB::table('products as s')
                 ->join('product_categories as c', 's.category_id', '=', 'c.id')
-                ->leftJoin('product_subcategories as csc', 's.sub_category_id', '=', 'csc.id')
                 ->select($selectFields)
                 ->where('s.status', 1);
 
@@ -173,7 +149,6 @@ class ProductController extends Controller
                     $q->where('s.name', 'like', "%$search%")
                         ->orWhere('s.description', 'like', "%$search%")
                         ->orWhere('c.name', 'like', "%$search%")
-                        ->orWhere('s.discount_price', 'like', "%$search%")
                         ->orWhere('s.price', 'like', "%$search%")
                         ->orWhere('s.includes', 'like', "%$search%");
                 });
@@ -181,10 +156,6 @@ class ProductController extends Controller
 
             if ($request->filled('category_id')) {
                 $query->where('s.category_id', $request->category_id);
-            }
-
-            if ($request->filled('sub_category_id')) {
-                $query->where('s.sub_category_id', $request->sub_category_id);
             }
 
             $perPage = $request->per_page ?? 24;

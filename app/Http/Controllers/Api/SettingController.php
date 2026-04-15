@@ -53,14 +53,14 @@ class SettingController extends Controller
             ];
 
             $heroContent = [
-                'title' => "Trusted Beauty Product at Your Doorstep",
-                'description' => "Experience premium beauty treatments from head to toe — hair, skin, nails, waxing, facials, spa therapies, and more, all delivered by expert professionals at your doorstep.",
+                'title' => "Precision Laser Cutting & Industrial Manufacturing Excellence",
+                'description' => "Delivering high-precision CNC laser cutting, industrial engraving, and state-of-the-art manufacturing solutions. Excellence engineered for industrial efficiency and superior quality.",
                 'badges' => [
-                    "Home",
-                    "Events",
-                    "Functions",
-                    "Marriages",
-                    "Special Occasions",
+                    "Laser Cutting",
+                    "CNC Machining",
+                    "Fabrication",
+                    "Engineering",
+                    "Industrial Design",
                 ],
             ];
 

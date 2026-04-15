@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
-    <title>BeautyDen | Signature Admin Access</title>
+    <title>Bnb Industry | Precision Admin Access</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('panel-assets/admin-logo/logo.png') }}">
 
@@ -40,7 +40,7 @@
         .visual-panel {
             flex: 1.2;
             position: relative;
-            background: url('https://images.pexels.com/photos/3762882/pexels-photo-3762882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover;
+            background: url('{{ URL::asset('panel-assets/images/laser-cutting-machine.png') }}') center/cover;
             display: none;
         }
 
@@ -328,8 +328,8 @@
     <div class="visual-panel">
         <div class="visual-overlay"></div>
         <div class="visual-content">
-            <h1 class="animate-fade">Crafting <span>Timeless Beauty</span></h1>
-            <p class="animate-fade delay-1">Signature administrative access to BeautyDen. Manage elegance with precision and power.</p>
+            <h1 class="animate-fade">Precision <span>Industrial Excellence</span></h1>
+            <p class="animate-fade delay-1">Secure administrative portal for Bnb Industry. Advanced laser cutting solutions with industrial precision.</p>
         </div>
     </div>
 
@@ -337,7 +337,7 @@
     <div class="form-panel">
         <div class="form-container">
             <div class="brand-box animate-fade">
-                <img src="{{ URL::asset('panel-assets/admin-logo/sidebar-Logo.png') }}" class="main-brand-logo" alt="BeautyDen Logo">
+                <img src="{{ URL::asset('panel-assets/admin-logo/sidebar-Logo.png') }}" class="main-brand-logo" alt="Bnb Logo">
                 <p class="brand-subtitle">Administrator Portal</p>
             </div>
 
@@ -367,7 +367,7 @@
             </div>
 
             <div class="footer-minimal animate-fade delay-2">
-                &copy; {{ date('Y') }} BeautyDen. Premium Beauty Solutions.
+                &copy; {{ date('Y') }} Bnb. All rights reserved.
             </div>
         </div>
     </div>

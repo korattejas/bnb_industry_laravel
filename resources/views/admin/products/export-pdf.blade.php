@@ -55,10 +55,8 @@
             <tr>
                 <th>Id</th>
                 <th>Category</th>
-                <th>Sub Category</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Discount Price</th>
                 {{-- <th>Total Price</th> --}}
                 {{-- <th>Discount %</th> --}}
 
@@ -83,10 +81,8 @@
                 <tr>
                     <td>{{ $s->id }}</td>
                     <td>{{ $s->category_name ?? '-' }}</td>
-                    <td>{{ $s->sub_category_name ?? '-' }}</td>
                     <td>{{ $s->name }}</td>
                     <td>{{ $s->price ?? 0 }}</td>
-                    <td>{{ $s->discount_price ?? 0 }}</td>
                     {{-- <td>{{ number_format($totalPrice, 2) }}</td>
                     <td>{{ number_format($discountPercent, 2) }}%</td> --}}
 

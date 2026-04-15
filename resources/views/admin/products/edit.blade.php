@@ -1,6 +1,15 @@
 @extends('admin.layouts.app')
 @section('header_style_content')
 <style>
+    :root {
+        --mst-indigo: #102365;
+        --mst-indigo-light: #f5f7ff;
+        --mst-text-main: #1e293b;
+        --mst-text-muted: #64748b;
+        --mst-bg-body: #f8fafc;
+        --mst-border: #e2e8f0;
+    }
+
     .product-images-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -56,6 +65,30 @@
         background: #b91c1c;
         transform: scale(1.1);
     }
+
+    .upload-zone {
+        background: #f1f5f9;
+        border-radius: 16px;
+        border: 2px dashed #cbd5e1;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .upload-zone:hover {
+        border-color: var(--mst-indigo);
+        background: #ecf1f6;
+    }
+
+    .form-label-luxury {
+        font-weight: 700;
+        color: var(--mst-text-main);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
 </style>
 @endsection
 @section('content')
@@ -98,7 +131,7 @@
 
                                         <div class="row row-sm">
 
-                                            <div class="col-6 mt-2">
+                                            <div class="col-12 mt-2">
                                                 <div class="form-group">
                                                     <label>Category</label>
                                                     <select name="category_id" class="form-control select2" id="category_id" required>
@@ -113,6 +146,7 @@
                                                 </div>
                                             </div>
                                             
+                                            {{-- 
                                             <div class="col-6 mt-2">
                                                 <div class="form-group">
                                                     <label>Sub Category</label>
@@ -121,6 +155,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            --}}
                                             
                                             <div class="col-12 mt-2">
                                                 <div class="form-group">
@@ -131,7 +166,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-6 mt-2">
+                                            <div class="col-12 mt-2">
                                                 <div class="form-group">
                                                     <label>Price</label>
                                                     <input type="text" class="form-control" name="price"
@@ -139,6 +174,7 @@
                                                 </div>
                                             </div>
 
+                                            {{-- 
                                             <div class="col-6 mt-2">
                                                 <div class="form-group">
                                                     <label>Discount Price</label>
@@ -147,6 +183,7 @@
                                                         placeholder="Discount Price">
                                                 </div>
                                             </div>
+                                            --}}
 
 
 
@@ -166,36 +203,38 @@
                                                         {{
                                                             is_array($product->includes)
                                                                 ? implode(',', $product->includes)
-                                                                : ($product->includes
-                                                                    ? implode(',', json_decode($product->includes, true))  {{-- string hoy to decode --}}
-                                                                    ? implode(',', json_decode($product->includes, true))
+                                                                : (is_string($product->includes) && !empty($product->includes)
+                                                                    ? implode(',', json_decode($product->includes, true) ?: [])
                                                                     : '')
                                                         }}
                                                     </textarea>
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 mt-2">
-                                                <div class="form-group">
-                                                    <label>Gallery Images</label>
-                                                    
-                                                    @if(isset($product->images) && !empty($product->images))
-                                                        <div class="product-images-grid" id="existing-images">
-                                                            @foreach($product->images as $img)
-                                                                <div class="image-preview-item" id="img-{{ md5($img) }}">
-                                                                    <img src="{{ asset('uploads/product/' . $img) }}" alt="Product Image">
-                                                                    <span class="remove-img-btn remove-image-ajax" 
-                                                                          data-id="{{ $product->id }}" 
-                                                                          data-image="{{ $img }}"
-                                                                          title="Delete this image">
-                                                                        <i class="bi bi-x"></i>
-                                                                    </span>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    @endif
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">Product Gallery Collection</label>
+                                                
+                                                @if(isset($product->images) && !empty($product->images))
+                                                    <div class="product-images-grid" id="existing-images">
+                                                        @foreach($product->images as $img)
+                                                            <div class="image-preview-item" id="img-{{ md5($img) }}">
+                                                                <img src="{{ asset('uploads/product/' . $img) }}" alt="Product Image">
+                                                                <span class="remove-img-btn remove-image-ajax" 
+                                                                      data-id="{{ $product->id }}" 
+                                                                      data-image="{{ $img }}"
+                                                                      title="Delete this image">
+                                                                    <i class="bi bi-x"></i>
+                                                                </span>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
 
-                                                    <input type="file" class="form-control filepond" name="images[]" multiple data-allow-reorder="true">
+                                                <div class="upload-zone p-4 text-center">
+                                                    <i class="bi bi-cloud-arrow-up-fill mb-2" style="font-size: 2.5rem; color: var(--mst-indigo);"></i>
+                                                    <h5 class="mb-3">Add More Photos</h5>
+                                                    <input type="file" class="form-control" name="photos[]" multiple accept="image/*">
+                                                    <p class="text-muted mt-2 small">Upload high-quality JPG, PNG or WebP images.</p>
                                                 </div>
                                             </div>
 
