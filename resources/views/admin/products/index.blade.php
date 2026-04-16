@@ -84,6 +84,7 @@
                                                 <th>Id</th>
                                                 <th>Category</th>
                                                 <th>Name</th>
+                                                <th>Watt</th>
                                                 <th>Images</th>
                                                 <th>Price</th>
                                                 {{-- <th>TP</th> --}}
@@ -213,6 +214,10 @@
                     name: 'name'
                 },
                 {
+                    data: 'watt',
+                    name: 'watt'
+                },
+                {
                     data: 'images',
                     name: 'images',
                     orderable: false,
@@ -294,6 +299,7 @@
                         <div class="c-row">
                             <div class="c-col-6"><div class="c-detail-card"><label>Category</label><p>${data.category_name ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Name</label><p>${data.name ?? '-'}</p></div></div>
+                            <div class="c-col-6"><div class="c-detail-card"><label>Watt</label><p>${data.watt ?? '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Price</label><p>${data.price ?? '-'}</p></div></div>
 
 

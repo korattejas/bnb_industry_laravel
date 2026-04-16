@@ -217,6 +217,7 @@ class ProductController extends Controller
             $data = [
                 'category_id' => $request->category_id,
                 'name'        => $request->name,
+                'watt'        => $request->watt,
                 'price'       => $request->price,
                 'description' => $request->description,
                 'includes'    => $includes,

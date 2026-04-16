@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PoliciesController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductSubcategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
@@ -185,5 +186,14 @@ Route::group(['prefix' => 'admin'], function () {
         /* Policies Route */
         Route::get('policies', [PoliciesController::class, 'createOrUpdate'])->name('admin.policies.index');
         Route::post('policies/store', [PoliciesController::class, 'store']);
+
+        /* Clients Routes */
+        Route::get('clients', [ClientController::class, 'index'])->name('admin.clients.index');
+        Route::get('clients/create', [ClientController::class, 'create'])->name('admin.clients.create');
+        Route::post('clients/store', [ClientController::class, 'store'])->name('admin.clients.store');
+        Route::get('clients/edit/{id}', [ClientController::class, 'edit'])->name('admin.clients.edit');
+        Route::delete('clients/{id}', [ClientController::class, 'destroy'])->name('admin.clients.destroy');
+        Route::get('getDataClients', [ClientController::class, 'getDataClients'])->name('admin.clients.data');
+        Route::get('clients/status/{id}/{status}', [ClientController::class, 'changeStatus'])->name('admin.clients.status');
     });
 });

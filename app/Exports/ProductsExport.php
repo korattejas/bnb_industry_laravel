@@ -18,6 +18,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
                 'products.id',
                 'sc.name as category_name',
                 'products.name',
+                'products.watt',
                 'products.price',
 
                 'products.description',
@@ -36,6 +37,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
                     'ID'            => $row->id,
                     'Category'      => $row->category_name,
                     'Name'          => $row->name,
+                    'Watt'          => $row->watt ?? '-',
                     'Price'         => $row->price ?? 0,
 
                     'Description'   => $row->description,
@@ -52,6 +54,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, Should
             'ID',
             'Category',
             'Name',
+            'Watt',
             'Price',
 
             'Description',

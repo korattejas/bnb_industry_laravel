@@ -13,6 +13,7 @@ class Product extends Model
         'category_id',
         'sub_category_id',
         'name',
+        'watt',
         'price',
         'discount_price',
         'description',

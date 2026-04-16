@@ -79,6 +79,7 @@ class ProductController extends Controller
                 's.category_id',
                 'c.name as category_name',
                 's.name',
+                's.watt',
                 's.price',
                 's.description',
                 's.includes',

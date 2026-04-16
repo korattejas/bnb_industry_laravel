@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\BlogController;
 // use App\Http\Controllers\Api\CustomerReviewController;
 // use App\Http\Controllers\Api\HiringController;
@@ -56,6 +57,7 @@ Route::middleware([RequestModifier::class, ResponseModifier::class, SanitizeInpu
         Route::get('settings', [SettingController::class, 'getsettings']);
         Route::post('contactFormSubmit', [ContactSubmissionsController::class, 'contactFormSubmit']);
         Route::post('policies', [PoliciesController::class, 'getPolicies']);
+        Route::get('clients', [ClientController::class, 'getClients']);
 //         Route::get('portfolio', [PortfolioController::class, 'getPortfolio']);
     });
 });

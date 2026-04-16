@@ -171,6 +171,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ Request::routeIs('admin.clients.index') ? 'active' : '' }}">
+                <a class="d-flex align-items-center" href="{{ route('admin.clients.index') }}">
+                    <i data-feather="users"></i>
+                    <span class="menu-title text-truncate">Clients</span>
+                </a>
+            </li>
+
             <li class=" navigation-header">
                 <span>Configuration</span>
             </li>

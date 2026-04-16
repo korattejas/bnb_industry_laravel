@@ -114,6 +114,15 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Watt -->
+                                            <div class="col-12 mt-2">
+                                                <div class="form-group">
+                                                    <label>Watt</label>
+                                                    <input type="text" class="form-control" name="watt"
+                                                        placeholder="Product Watt (e.g. 10W, 20W)">
+                                                </div>
+                                            </div>
+
                                             <!-- Price -->
                                             <div class="col-12 mt-2">
                                                 <div class="form-group">

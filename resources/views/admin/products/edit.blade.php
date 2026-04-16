@@ -168,6 +168,15 @@
 
                                             <div class="col-12 mt-2">
                                                 <div class="form-group">
+                                                    <label>Watt</label>
+                                                    <input type="text" class="form-control" name="watt"
+                                                        value="{{ $product->watt }}"
+                                                        placeholder="Product Watt (e.g. 10W, 20W)">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 mt-2">
+                                                <div class="form-group">
                                                     <label>Price</label>
                                                     <input type="text" class="form-control" name="price"
                                                         value="{{ $product->price }}" placeholder="Price" required>

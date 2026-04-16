@@ -56,6 +56,7 @@
                 <th>Id</th>
                 <th>Category</th>
                 <th>Name</th>
+                <th>Watt</th>
                 <th>Price</th>
                 {{-- <th>Total Price</th> --}}
                 {{-- <th>Discount %</th> --}}
@@ -82,6 +83,7 @@
                     <td>{{ $s->id }}</td>
                     <td>{{ $s->category_name ?? '-' }}</td>
                     <td>{{ $s->name }}</td>
+                    <td>{{ $s->watt ?? '-' }}</td>
                     <td>{{ $s->price ?? 0 }}</td>
                     {{-- <td>{{ number_format($totalPrice, 2) }}</td>
                     <td>{{ number_format($discountPercent, 2) }}%</td> --}}

@@ -69,4 +69,9 @@ class ImageUploadHelper
     {
         return self::upload($file, 'portfolio');
     }
+
+    public static function clientImageUpload($file)
+    {
+        return self::upload($file, 'clients');
+    }
 }
