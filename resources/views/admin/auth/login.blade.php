@@ -343,6 +343,7 @@
 
             <div class="auth-card animate-fade delay-1">
                 <form class="auth-login-form" method="POST" id="addEditForm">
+                    @csrf
                     <div class="input-group-custom">
                         <label for="login_email">Email Address</label>
                         <div class="control-wrap">

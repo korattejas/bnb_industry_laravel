@@ -4,6 +4,7 @@ $(function () {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr("content");
     let $form = $("#addEditForm");
     $form.on("submit", function (e) {
         e.preventDefault();
