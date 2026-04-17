@@ -68,6 +68,7 @@
                                                 <th>Last Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
+                                                <th>City Name</th>
                                                 <th data-stuff="Active,InActive">Status</th>
                                                 <th data-search="false">Action</th>
 
@@ -148,6 +149,10 @@
                     name: 'phone'
                 },
                 {
+                    data: 'city_name',
+                    name: 'city_name'
+                },
+                {
                     data: 'status',
                     name: 'status'
                 },
@@ -203,6 +208,12 @@
                         <div class="c-detail-card">
                             <label>Phone</label>
                             <p>${data.phone ?? '-'}</p>
+                        </div>
+                        </div>
+                        <div class="c-col-6">
+                        <div class="c-detail-card">
+                            <label>City Name</label>
+                            <p>${data.city_name ?? '-'}</p>
                         </div>
                         </div>
                         <div class="c-col-6">

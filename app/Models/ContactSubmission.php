@@ -14,6 +14,7 @@ class ContactSubmission extends Model
         'last_name',
         'email',
         'phone',
+        'city_name',
         'product_id',
         'subject',
         'message',
