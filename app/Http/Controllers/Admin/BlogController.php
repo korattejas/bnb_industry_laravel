@@ -147,19 +147,25 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         $id = $request->input('edit_value', 0);
+        \Log::debug('Blog Store Request Data:', $request->all());
 
         try {
             $rules = [
                 'category_id'  => 'required|exists:blog_categories,id',
                 'title'        => 'required|string|max:200',
+                'meta_title'   => 'nullable|string|max:255',
                 'slug'         => 'required|string|max:200|unique:blogs,slug' . ($id ? ",$id" : ''),
                 'excerpt'      => 'nullable|string',
                 'content'      => 'nullable|string',
+                'content_sections' => 'nullable|string',
                 'read_time'    => 'nullable|string|max:50',
                 'author'       => 'nullable|string|max:100',
+                'author_email' => 'nullable|email|max:255',
                 'publish_date' => 'nullable|date',
                 'tags'         => 'nullable',
-                'icon'         => $id == 0 ? 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048' : 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'icon'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'featured_image_alt' => 'nullable|string|max:255',
                 'featured'     => 'nullable|boolean',
                 'status'       => 'nullable|boolean',
             ];
@@ -170,7 +176,8 @@ class BlogController extends Controller
             }
 
             $icon = null;
-            if ($request->hasFile('icon')) {
+            $imageKey = $request->hasFile('featured_image') ? 'featured_image' : ($request->hasFile('icon') ? 'icon' : null);
+            if ($imageKey) {
                 $blog = Blog::where('id', $id)->first();
                 if ($blog) {
                     $filePath = public_path('uploads/blogs/' . $blog->icon);
@@ -178,30 +185,67 @@ class BlogController extends Controller
                         File::delete($filePath);
                     }
                 }
-                $icon = ImageUploadHelper::blogsimageUpload($request->file('icon'));
+                $icon = ImageUploadHelper::blogsimageUpload($request->file($imageKey));
             } elseif ($id != 0) {
                 $icon = Blog::find($id)?->icon;
             }
 
+            // Handle section images if any
+            $content_sections = $request->input('content_sections', '[]');
+            $sections = json_decode($content_sections, true);
+            
+            // If editing, get old sections for cleanup
+            $oldSections = [];
+            if ($id != 0) {
+                $oldBlog = Blog::find($id);
+                if ($oldBlog && $oldBlog->content_sections) {
+                    $oldSections = json_decode($oldBlog->content_sections, true);
+                }
+            }
+
+            if (is_array($sections)) {
+                foreach ($sections as $key => $section) {
+                    $fileKey = 'section_image_' . $key;
+                    if ($section['type'] == 'image') {
+                        if ($request->hasFile($fileKey)) {
+                            // If there was an old image in this position (or matching by some ID), delete it
+                            // Since it's a dynamic list, it's safer to compare images or just handle specific replaces
+                            if (isset($oldSections[$key]['image']) && $oldSections[$key]['image']) {
+                                $oldFilePath = public_path('uploads/blogs/' . $oldSections[$key]['image']);
+                                if (File::exists($oldFilePath)) {
+                                    File::delete($oldFilePath);
+                                }
+                            }
+                            
+                            $sectionImage = ImageUploadHelper::blogsimageUpload($request->file($fileKey));
+                            $sections[$key]['image'] = $sectionImage;
+                        }
+                    }
+                }
+                $content_sections = json_encode($sections);
+            }
+
             if ($request->filled('tags')) {
                 $array = array_map('trim', explode(',', $request->tags));
-
                 $array = array_filter($array, fn($val) => $val !== '');
-
                 $tags = json_encode(array_values($array));
             }
 
             $data = [
                 'category_id'  => $request->category_id,
                 'title'        => $request->title,
-                'slug'        => $request->slug,
+                'meta_title'   => $request->meta_title,
+                'slug'         => $request->slug,
                 'excerpt'      => $request->excerpt,
                 'content'      => $request->content,
+                'content_sections' => $content_sections,
                 'read_time'    => $request->read_time,
                 'author'       => $request->author,
+                'author_email' => $request->author_email,
                 'publish_date' => $request->publish_date ?? today(),
                 'tags'         => $tags ?? null,
                 'icon'         => $icon,
+                'featured_image_alt' => $request->featured_image_alt,
                 'meta_keywords'    => $request->meta_keywords,
                 'meta_description'    => $request->meta_description,
                 'featured'     => (int) $request->input('featured', 0),
@@ -217,8 +261,11 @@ class BlogController extends Controller
             }
 
             return response()->json(['success' => true, 'message' => $msg]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $this->error_message], $this->exception_error_code);
+        } catch (\Throwable $e) {
+            \Log::error('Blog Store Error: ' . $e->getMessage(), [
+                'stack' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
         }
     }
 
@@ -247,12 +294,29 @@ class BlogController extends Controller
         try {
             $blog = Blog::find($id);
             if ($blog) {
+                // Delete Featured Image
                 if ($blog->icon) {
                     $filePath = public_path('uploads/blogs/' . $blog->icon);
                     if (File::exists($filePath)) {
                         File::delete($filePath);
                     }
                 }
+                
+                // Delete Section Images
+                if ($blog->content_sections) {
+                    $sections = json_decode($blog->content_sections, true);
+                    if (is_array($sections)) {
+                        foreach ($sections as $section) {
+                            if ($section['type'] == 'image' && !empty($section['image'])) {
+                                $sectionFile = public_path('uploads/blogs/' . $section['image']);
+                                if (File::exists($sectionFile)) {
+                                    File::delete($sectionFile);
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 $blog->delete();
             }
             return response()->json(['message' => 'Blog deleted successfully']);

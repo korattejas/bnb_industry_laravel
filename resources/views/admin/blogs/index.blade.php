@@ -193,32 +193,92 @@
                 type: 'GET',
                 success: function(response) {
                     let data = response.data;
-                    let html = `
-                        <div class="c-row">
-                            <div class="c-col-6"><div class="c-detail-card"><label>Category</label><p>${data.category ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Title</label><p>${data.title ?? '-'}</p></div></div>
-                            <div class="c-col-12"><div class="c-detail-card"><label>Excerpt</label><p>${data.excerpt ?? '-'}</p></div></div>
-                            <div class="c-col-12"><div class="c-detail-card"><label>Content</label><p>${data.content ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Read Time</label><p>${data.read_time ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Author</label><p>${data.author ?? '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Publish Date</label><p>${data.publish_date ?? '-'}</p></div></div>
-                            <div class="c-col-12"><div class="c-detail-card"><label>Tags</label><p>${
-                                data.tags ? JSON.parse(data.tags).map(tag => `<span class="c-include-badge">${tag}</span>`).join(" ") : '-'
-                            }</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Featured</label>
-                                <p>${data.featured == 1 ? '<span class="badge badge-glow bg-primary">Featured</span>' : '<span class="badge badge-glow bg-secondary">Normal</span>'}</p>
-                            </div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Status</label>
-                                <p>${data.status == 1 ? '<span class="badge badge-glow bg-success">Active</span>' : '<span class="badge badge-glow bg-danger">InActive</span>'}</p>
-                            </div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Created At</label><p>${data.created_at ? new Date(data.created_at).toLocaleString() : '-'}</p></div></div>
-                            <div class="c-col-6"><div class="c-detail-card"><label>Updated At</label><p>${data.updated_at ? new Date(data.updated_at).toLocaleString() : '-'}</p></div></div>
+                    let sectionsHtml = '';
+                    if (data.content_sections) {
+                        try {
+                            const sections = JSON.parse(data.content_sections);
+                            sections.forEach((section, idx) => {
+                                if (section.type === 'content') {
+                                    sectionsHtml += `<div class="p-1 mb-1 border-start border-primary border-3 bg-light">
+                                        <small class="text-primary font-weight-bold">Section ${idx+1}: Content</small>
+                                        <div>${section.content}</div>
+                                    </div>`;
+                                } else if (section.type === 'image') {
+                                    sectionsHtml += `<div class="p-1 mb-1 border-start border-info border-3 bg-light">
+                                        <small class="text-info font-weight-bold">Section ${idx+1}: Image</small>
+                                        <div class="d-flex gap-2 align-items-center mt-1">
+                                            <img src="${baseUrl + section.image}" style="height: 60px; border-radius: 4px;">
+                                            <div>
+                                                <p class="mb-0 small"><strong>Alt:</strong> ${section.alt || '-'}</p>
+                                                <p class="mb-0 small"><strong>Caption:</strong> ${section.caption || '-'}</p>                                            
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                } else if (section.type === 'link') {
+                                    sectionsHtml += `<div class="p-1 mb-1 border-start border-warning border-3 bg-light">
+                                        <small class="text-warning font-weight-bold">Section ${idx+1}: Link</small>
+                                        <p class="mb-0"><strong>${section.link_text}:</strong> <a href="${section.link_url}" target="_blank">${section.link_url}</a></p>
+                                        <p class="mb-0 small text-muted">${section.link_desc || ''}</p>
+                                    </div>`;
+                                }
+                            });
+                        } catch (e) {
+                            sectionsHtml = data.content_sections;
+                        }
+                    }
 
-                            <div class="c-col-12 text-center">
-                                <label>Icon</label><br>
+                    let html = `
+                        <div class="row">
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Category</label><p class="border-bottom pb-25 text-primary fs-5">${data.category ?? '-'}</p></div>
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Title</label><p class="border-bottom pb-25 text-primary fs-5">${data.title ?? '-'}</p></div>
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Meta Title</label><p class="border-bottom pb-25 text-primary fs-5">${data.meta_title ?? '-'}</p></div>
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Slug</label><p class="border-bottom pb-25 text-primary fs-5">${data.slug ?? '-'}</p></div>
+                            
+                            <div class="col-md-12 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Excerpt</label><p class="border-bottom pb-25 fs-5">${data.excerpt ?? '-'}</p></div>
+                            
+                            <div class="col-md-12 mb-1">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1.1rem;">Content Sections</label>
+                                <div class="border rounded p-1 mb-1" style="max-height: 300px; overflow-y: auto; background: #fafafa;">
+                                    ${sectionsHtml || '<p class="text-muted">No sections added</p>'}
+                                </div>
+                            </div>
+                            
+                             <div class="col-md-12 mb-1">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1.1rem;">Legacy Content (Original)</label>
+                                <div class="border rounded p-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                                    ${data.content || '<p class="text-muted">-</p>'}
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Author</label><p class="border-bottom pb-25 fs-5">${data.author ?? '-'}</p></div>
+                            <div class="col-md-4 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Author Email</label><p class="border-bottom pb-25 fs-5">${data.author_email ?? '-'}</p></div>
+                            <div class="col-md-4 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Read Time</label><p class="border-bottom pb-25 fs-5">${data.read_time ?? '-'}</p></div>
+                            
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Publish Date</label><p class="border-bottom pb-25 fs-5">${data.publish_date ?? '-'}</p></div>
+                            <div class="col-md-6 mb-1"><label class="form-label fw-bolder text-dark" style="font-size: 1rem;">Status</label><p class="border-bottom pb-25">${data.status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">InActive</span>'}</p></div>
+
+                            <div class="col-md-12 mb-1">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1.1rem;">Tags</label>
+                                <div class="border-bottom pb-25">${
+                                    data.tags ? JSON.parse(data.tags).map(tag => `<span class="badge bg-light-primary me-50 mb-50">${tag}</span>`).join(" ") : '-'
+                                }</div>
+                            </div>
+
+                            <div class="col-md-12 mb-1">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1rem;">SEO Meta Keywords</label>
+                                <p class="border-bottom pb-25 text-muted small">${data.meta_keywords ?? '-'}</p>
+                            </div>
+                            <div class="col-md-12 mb-1">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1rem;">SEO Meta Description</label>
+                                <p class="border-bottom pb-25 text-muted small">${data.meta_description ?? '-'}</p>
+                            </div>
+
+                            <div class="col-md-12 text-center mt-2">
+                                <label class="form-label fw-bolder text-dark" style="font-size: 1.1rem; d-block">Featured Image</label>
                                 ${data.icon 
-                                    ? `<img src="${baseUrl + data.icon}" alt="Blog Icon" class="img-fluid product-icon" style="max-width:250px; cursor:pointer;" onclick="window.open('${baseUrl + data.icon}', '_blank')">`
-                                    : '<p>-</p>'
+                                    ? `<img src="${baseUrl + data.icon}" alt="Blog Icon" class="img-fluid rounded" style="max-width:300px; cursor:pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onclick="window.open('${baseUrl + data.icon}', '_blank')">
+                                       <p class="mt-1 small text-dark"><strong>Alt:</strong> ${data.featured_image_alt || '-'}</p>`
+                                    : '<p class="text-muted">No image uploaded</p>'
                                 }
                             </div>
                         </div>`;

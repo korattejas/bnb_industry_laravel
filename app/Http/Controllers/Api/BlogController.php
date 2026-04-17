@@ -68,10 +68,14 @@ class BlogController extends Controller
                     'b.content',
                     'b.read_time',
                     'b.author',
+                    'b.author_email',
                     'b.publish_date',
                     'b.tags',
+                    'b.content_sections',
                     DB::raw('CONCAT("' . asset('uploads/blogs') . '/", b.icon) AS icon'),
+                    'b.featured_image_alt',
                     'b.featured',
+                    'b.meta_title',
                     'b.meta_keywords',
                     'b.meta_description',
                 )
@@ -103,6 +107,7 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($blog) {
                     $blog->tags = $blog->tags ? json_decode($blog->tags, true) : [];
+                    $blog->content_sections = $blog->content_sections ? json_decode($blog->content_sections, true) : [];
                     return $blog;
                 });
 
@@ -151,10 +156,14 @@ class BlogController extends Controller
                     'b.content',
                     'b.read_time',
                     'b.author',
+                    'b.author_email',
                     'b.publish_date',
                     'b.tags',
+                    'b.content_sections',
                     DB::raw('CONCAT("' . asset('uploads/blogs') . '/", b.icon) AS icon'),
+                    'b.featured_image_alt',
                     'b.featured',
+                    'b.meta_title',
                     'b.meta_keywords',
                     'b.meta_description',
                 )
@@ -178,6 +187,7 @@ class BlogController extends Controller
 
             if ($blogs) {
                 $blogs->tags = $blogs->tags ? json_decode($blogs->tags, true) : [];
+                $blogs->content_sections = $blogs->content_sections ? json_decode($blogs->content_sections, true) : [];
             }
 
             return $this->sendResponse(
