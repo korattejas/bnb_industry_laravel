@@ -246,7 +246,7 @@ class ProductController extends Controller
                         }
                     }
                 }
-                $content_sections = json_encode($sections);
+                $content_sections = $sections;
             }
 
             $data = [

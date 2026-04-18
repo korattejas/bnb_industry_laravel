@@ -324,6 +324,28 @@
                             <div class="c-col-6"><div class="c-detail-card"><label>Created At</label><p>${data.created_at ? new Date(data.created_at).toLocaleString() : '-'}</p></div></div>
                             <div class="c-col-6"><div class="c-detail-card"><label>Updated At</label><p>${data.updated_at ? new Date(data.updated_at).toLocaleString() : '-'}</p></div></div>
 
+                            <div class="c-col-12">
+                                <div class="c-detail-card">
+                                    <label>Dynamic Content Sections</label>
+                                    <div class="mt-1">
+                                        ${
+                                            data.content_sections && data.content_sections.length > 0
+                                            ? data.content_sections.map(section => {
+                                                if(section.type === 'content') {
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Text]</strong><br>${section.content}</div>`;
+                                                } else if(section.type === 'image') {
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Image]</strong><br><img src="${baseUrl + section.image}" style="max-width:200px;"><br><small>${section.caption ?? ''}</small></div>`;
+                                                } else if(section.type === 'link') {
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Link]</strong><br><a href="${section.link_url}" target="_blank">${section.link_text}</a><p>${section.link_desc ?? ''}</p></div>`;
+                                                }
+                                                return '';
+                                            }).join("")
+                                            : '<p class="text-muted">No sections added</p>'
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Images (Gallery Preview) -->
                             <div class="c-col-12">
                                 <div class="c-detail-card">

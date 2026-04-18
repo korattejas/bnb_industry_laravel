@@ -502,6 +502,8 @@
             if (typeof ClassicEditor !== 'undefined') {
                 ClassicEditor.create(el, {
                     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo']
+                }).then(editor => {
+                    el.ckeditorInstance = editor;
                 }).catch(error => console.error(error));
             }
         }
@@ -531,9 +533,9 @@
                     const section = { type: type };
                     
                     if (type === 'content') {
-                        const editorContainer = $(this).find('.ck-editor__editable').get(0);
-                        if (editorContainer && editorContainer.ckeditorInstance) {
-                            section.content = editorContainer.ckeditorInstance.getData();
+                        const textarea = $(this).find('textarea.editor').get(0);
+                        if (textarea && textarea.ckeditorInstance) {
+                            section.content = textarea.ckeditorInstance.getData();
                         } else {
                             section.content = $(this).find('textarea').val();
                         }
