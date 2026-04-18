@@ -82,6 +82,7 @@ class ProductController extends Controller
                 's.watt',
                 's.price',
                 's.description',
+                's.content_sections',
                 's.includes',
                 's.images',
                 's.is_popular'
@@ -102,6 +103,15 @@ class ProductController extends Controller
 
                 // Process includes and images for the single product
                 $product->includes = $product->includes ? json_decode($product->includes, true) : [];
+                $product->content_sections = $product->content_sections ? json_decode($product->content_sections, true) : [];
+                if (is_array($product->content_sections)) {
+                    foreach ($product->content_sections as &$section) {
+                        if ($section['type'] == 'image' && !empty($section['image'])) {
+                            $section['image'] = asset('uploads/product/' . $section['image']);
+                        }
+                    }
+                }
+
                 $productImages = $product->images ? json_decode($product->images, true) : [];
                 $product->images = array_map(function ($img) {
                     return asset('uploads/product/' . $img);
@@ -166,6 +176,15 @@ class ProductController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($product) {
                     $product->includes = $product->includes ? json_decode($product->includes, true) : [];
+                    $product->content_sections = $product->content_sections ? json_decode($product->content_sections, true) : [];
+                    if (is_array($product->content_sections)) {
+                        foreach ($product->content_sections as &$section) {
+                            if ($section['type'] == 'image' && !empty($section['image'])) {
+                                $section['image'] = asset('uploads/product/' . $section['image']);
+                            }
+                        }
+                    }
+
                     $productImages = $product->images ? json_decode($product->images, true) : [];
                     $product->images = array_map(function ($img) {
                         return asset('uploads/product/' . $img);

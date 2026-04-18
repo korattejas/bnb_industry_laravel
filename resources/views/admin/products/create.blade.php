@@ -33,6 +33,61 @@
         margin-bottom: 10px;
         display: block;
     }
+
+    .section-card {
+        border: 1px solid #ebe9f1;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .section-card:hover {
+        box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1);
+    }
+    .section-header {
+        padding: 0.75rem 1.25rem;
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #ebe9f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .section-title {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .section-body {
+        padding: 1.5rem;
+    }
+    .add-section-btns {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .image-upload-wrapper-section {
+        border: 2px dashed #ebe9f1;
+        padding: 2rem;
+        text-align: center;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        position: relative;
+    }
+    .image-upload-wrapper-section:hover {
+        border-color: #7367f0;
+    }
+    .image-preview-section {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 10px;
+        border-radius: 4px;
+        display: none;
+    }
+    .badge-content { background-color: #e3f2fd; color: #1976d2; }
+    .badge-image { background-color: #f3e5f5; color: #7b1fa2; }
+    .badge-link { background-color: #fff3e0; color: #ef6c00; }
 </style>
 @endsection
 
@@ -153,6 +208,26 @@
                                                 </div>
                                             </div>
 
+                                            <div class="col-12 mt-4">
+                                                <input type="hidden" name="content_sections" id="content_sections_data">
+                                                <label class="form-label-luxury">Description Content Sections</label>
+                                                <div id="sections-container">
+                                                    <!-- Sections will be added here via JS -->
+                                                </div>
+
+                                                <div class="add-section-btns mt-2">
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addSection('content')">
+                                                        <i class="bi bi-file-text"></i> Add Content
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addSection('image')">
+                                                        <i class="bi bi-image"></i> Add Image
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addSection('link')">
+                                                        <i class="bi bi-link"></i> Add Link
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                             <!-- Includes -->
                                             <div class="col-12 mt-2">
                                                 <div class="form-group">
@@ -223,6 +298,107 @@
             </div>
         </div>
     </div>
+
+    <!-- Section Templates -->
+    <template id="template-content">
+        <div class="section-card" data-type="content">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="badge badge-content px-1"><i class="bi bi-file-text"></i> Content</span>
+                    <span class="text-muted font-weight-normal section-label">Section 1</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm" style="width: 100px;" onchange="changeSectionType(this)">
+                        <option value="content" selected>Content</option>
+                        <option value="image">Image</option>
+                        <option value="link">Link</option>
+                    </select>
+                    <button type="button" class="btn btn-link btn-sm text-danger p-0" onclick="removeSection(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="section-body">
+                <textarea class="form-control editor" rows="6" placeholder="Write your content here.."></textarea>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-image">
+        <div class="section-card" data-type="image">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="badge badge-image px-1"><i class="bi bi-image"></i> Image</span>
+                    <span class="text-muted font-weight-normal section-label">Section 1</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm" style="width: 100px;" onchange="changeSectionType(this)">
+                        <option value="content">Content</option>
+                        <option value="image" selected>Image</option>
+                        <option value="link">Link</option>
+                    </select>
+                    <button type="button" class="btn btn-link btn-sm text-danger p-0" onclick="removeSection(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="image-upload-wrapper-section mb-2" onclick="$(this).find('input').click()">
+                    <i class="bi bi-cloud-arrow-up" style="font-size: 2rem; color: #b9b9c3;"></i>
+                    <p class="mt-1 mb-0 small text-muted">Click or drag to upload section image</p>
+                    <input type="file" class="d-none" onchange="previewImageSection(this, null)" onclick="event.stopPropagation()">
+                    <img class="image-preview-section" src="#" alt="Preview">
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small font-weight-bold">Alt Text</label>
+                        <input type="text" class="form-control form-control-sm section-alt" placeholder="Describe the image">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small font-weight-bold">Caption</label>
+                        <input type="text" class="form-control form-control-sm section-caption" placeholder="Optional caption">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-link">
+        <div class="section-card" data-type="link">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="badge badge-link px-1"><i class="bi bi-link"></i> Link</span>
+                    <span class="text-muted font-weight-normal section-label">Section 1</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm" style="width: 100px;" onchange="changeSectionType(this)">
+                        <option value="content">Content</option>
+                        <option value="image">Image</option>
+                        <option value="link" selected>Link</option>
+                    </select>
+                    <button type="button" class="btn btn-link btn-sm text-danger p-0" onclick="removeSection(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label small font-weight-bold">Link Text *</label>
+                        <input type="text" class="form-control form-control-sm section-link-text" placeholder="e.g. Visit Website">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small font-weight-bold">URL *</label>
+                        <input type="url" class="form-control form-control-sm section-link-url" placeholder="https://example.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label small font-weight-bold">Description</label>
+                    <textarea class="form-control form-control-sm section-link-desc" rows="2" placeholder="Brief description of the link"></textarea>
+                </div>
+            </div>
+        </div>
+    </template>
 @endsection
 
 @section('footer_script_content')
@@ -256,6 +432,123 @@
                     }
                 });
             }
+        });
+
+        // Content Sections Logic
+        function addSection(type, data = null) {
+            const container = document.getElementById('sections-container');
+            const template = document.getElementById('template-' + type);
+            const clone = template.content.cloneNode(true);
+            
+            container.appendChild(clone);
+            
+            const lastSection = container.lastElementChild;
+            updateSectionLabels();
+            
+            if (type === 'content') {
+                const textarea = lastSection.querySelector('.editor');
+                if (data && data.content) textarea.value = data.content;
+                initEditor(textarea);
+            } else if (type === 'image' && data) {
+                lastSection.querySelector('.section-alt').value = data.alt || '';
+                lastSection.querySelector('.section-caption').value = data.caption || '';
+                if (data.image) {
+                    const preview = lastSection.querySelector('.image-preview-section');
+                    preview.src = "{{ asset('uploads/product') }}/" + data.image;
+                    preview.style.display = 'block';
+                    lastSection.querySelector('.image-upload-wrapper-section i').style.display = 'none';
+                    lastSection.querySelector('.image-upload-wrapper-section p').style.display = 'none';
+                }
+            } else if (type === 'link' && data) {
+                lastSection.querySelector('.section-link-text').value = data.link_text || '';
+                lastSection.querySelector('.section-link-url').value = data.link_url || '';
+                lastSection.querySelector('.section-link-desc').value = data.link_desc || '';
+            }
+        }
+
+        function removeSection(btn) {
+            btn.closest('.section-card').remove();
+            updateSectionLabels();
+        }
+
+        function updateSectionLabels() {
+            const sections = document.querySelectorAll('.section-card');
+            sections.forEach((section, index) => {
+                section.querySelector('.section-label').textContent = 'Section ' + (index + 1);
+                const imgInput = section.querySelector('input[type="file"]');
+                if (imgInput) {
+                    imgInput.name = 'section_image_' + index;
+                }
+            });
+        }
+
+        function changeSectionType(select) {
+            const card = select.closest('.section-card');
+            const newType = select.value;
+            const currentType = card.dataset.type;
+            if (newType === currentType) return;
+            
+            const template = document.getElementById('template-' + newType);
+            const clone = template.content.cloneNode(true);
+            card.innerHTML = clone.querySelector('.section-card').innerHTML;
+            card.dataset.type = newType;
+            updateSectionLabels();
+            if (newType === 'content') {
+                initEditor(card.querySelector('.editor'));
+            }
+        }
+
+        function initEditor(el) {
+            if (typeof ClassicEditor !== 'undefined') {
+                ClassicEditor.create(el, {
+                    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo']
+                }).catch(error => console.error(error));
+            }
+        }
+
+        function previewImageSection(input, previewId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    let preview = input.closest('.section-body').querySelector('.image-preview-section');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    input.closest('.image-upload-wrapper-section').querySelector('p').style.display = 'none';
+                    input.closest('.image-upload-wrapper-section').querySelector('i').style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $(document).ready(function() {
+            // Initial section
+            addSection('content');
+
+            $('#addEditForm').on('submit', function(e) {
+                const sectionsData = [];
+                $('.section-card').each(function() {
+                    const type = $(this).data('type');
+                    const section = { type: type };
+                    
+                    if (type === 'content') {
+                        const editorContainer = $(this).find('.ck-editor__editable').get(0);
+                        if (editorContainer && editorContainer.ckeditorInstance) {
+                            section.content = editorContainer.ckeditorInstance.getData();
+                        } else {
+                            section.content = $(this).find('textarea').val();
+                        }
+                    } else if (type === 'image') {
+                        section.alt = $(this).find('.section-alt').val();
+                        section.caption = $(this).find('.section-caption').val();
+                    } else if (type === 'link') {
+                        section.link_text = $(this).find('.section-link-text').val();
+                        section.link_url = $(this).find('.section-link-url').val();
+                        section.link_desc = $(this).find('.section-link-desc').val();
+                    }
+                    sectionsData.push(section);
+                });
+                $('#content_sections_data').val(JSON.stringify(sectionsData));
+            });
         });
     </script>
 @endsection

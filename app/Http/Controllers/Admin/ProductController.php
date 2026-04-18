@@ -177,6 +177,7 @@ class ProductController extends Controller
                 // 'price'       => 'required|numeric|min:0',
                 // 'discount_price' => 'nullable|numeric|min:0',
                 'description' => 'required|string',
+                'content_sections' => 'nullable|string',
                 'photos'   => 'nullable|array',
                 'photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp',
             ];
@@ -214,12 +215,47 @@ class ProductController extends Controller
                 $includes = json_encode(array_values($array));
             }
 
+            // Handle section images if any
+            $content_sections = $request->input('content_sections', '[]');
+            $sections = json_decode($content_sections, true);
+
+            // If editing, get old sections for cleanup
+            $oldSections = [];
+            if ($id != 0) {
+                if ($product && $product->content_sections) {
+                    $oldSections = is_array($product->content_sections) ? $product->content_sections : json_decode($product->content_sections, true);
+                }
+            }
+
+            if (is_array($sections)) {
+                foreach ($sections as $key => $section) {
+                    $fileKey = 'section_image_' . $key;
+                    if ($section['type'] == 'image') {
+                        if ($request->hasFile($fileKey)) {
+                            if (isset($oldSections[$key]['image']) && $oldSections[$key]['image']) {
+                                $oldFilePath = public_path('uploads/product/' . $oldSections[$key]['image']);
+                                if (File::exists($oldFilePath)) {
+                                    File::delete($oldFilePath);
+                                }
+                            }
+
+                            $sectionImage = ImageUploadHelper::productimageUpload($request->file($fileKey));
+                            $sections[$key]['image'] = $sectionImage;
+                        } elseif (isset($oldSections[$key]['image'])) {
+                            $sections[$key]['image'] = $oldSections[$key]['image'];
+                        }
+                    }
+                }
+                $content_sections = json_encode($sections);
+            }
+
             $data = [
                 'category_id' => $request->category_id,
                 'name'        => $request->name,
                 'watt'        => $request->watt,
                 'price'       => $request->price,
                 'description' => $request->description,
+                'content_sections' => $content_sections,
                 'includes'    => $includes,
                 'images'      => !empty($storedImages) ? $storedImages : null,
                 'is_popular'  => (int) $request->is_popular,
@@ -270,6 +306,21 @@ class ProductController extends Controller
                         $filePath = public_path('uploads/product/' . $image);
                         if (File::exists($filePath)) {
                             File::delete($filePath);
+                        }
+                    }
+                }
+
+                // Delete Section Images
+                if ($product->content_sections) {
+                    $sections = is_array($product->content_sections) ? $product->content_sections : json_decode($product->content_sections, true);
+                    if (is_array($sections)) {
+                        foreach ($sections as $section) {
+                            if ($section['type'] == 'image' && !empty($section['image'])) {
+                                $sectionFile = public_path('uploads/product/' . $section['image']);
+                                if (File::exists($sectionFile)) {
+                                    File::delete($sectionFile);
+                                }
+                            }
                         }
                     }
                 }

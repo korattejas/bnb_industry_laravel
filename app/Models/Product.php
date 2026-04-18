@@ -17,6 +17,7 @@ class Product extends Model
         'price',
         'discount_price',
         'description',
+        'content_sections',
         'includes',
         'images',
         'is_popular',
@@ -25,5 +26,6 @@ class Product extends Model
 
     protected $casts = [
         'images' => 'array',
+        'content_sections' => 'array',
     ];
 }
