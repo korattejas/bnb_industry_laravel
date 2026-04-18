@@ -104,6 +104,7 @@ class BlogController extends Controller
             $page = $request->page ?? 1;
 
             $blogs = $query->orderByDesc('b.featured')
+                ->orderByDesc('b.id')
                 ->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($blog) {
                     $blog->tags = $blog->tags ? json_decode($blog->tags, true) : [];
