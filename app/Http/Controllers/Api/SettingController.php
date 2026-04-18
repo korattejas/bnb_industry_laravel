@@ -40,37 +40,11 @@ class SettingController extends Controller
                 return $this->sendError('No Setting found.', $this->backend_error_status);
             }
 
-            $heroSlides = [
-                [
-                    'image' => asset('uploads/home-page-slider/slider1.webp')
-                ],
-                [
-                    'image' => asset('uploads/home-page-slider/slider2.webp')
-                ],
-                [
-                    'image' => asset('uploads/home-page-slider/slider3.webp')
-                ],
-            ];
-
-            $heroContent = [
-                'title' => "Precision Laser Cutting & Industrial Manufacturing Excellence",
-                'description' => "Delivering high-precision CNC laser cutting, industrial engraving, and state-of-the-art manufacturing solutions. Excellence engineered for industrial efficiency and superior quality.",
-                'badges' => [
-                    "Laser Cutting",
-                    "CNC Machining",
-                    "Fabrication",
-                    "Engineering",
-                    "Industrial Design",
-                ],
-            ];
-
             return response()->json([
                 'code' => 200,
                 'status' => true,
                 'message' => 'Settings retrieved successfully',
                 'data' => $settings,
-                'homePageSlides' => $heroSlides,
-                'homePageSlidesContent' => $heroContent
             ]);
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, $function_name);

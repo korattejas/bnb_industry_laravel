@@ -66,9 +66,12 @@
                                                 <th>Id</th>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
+                                                <th>Company</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>City Name</th>
+                                                <th>Country Name</th>
+                                                <th>Country Code</th>
                                                 <th data-stuff="Active,InActive">Status</th>
                                                 <th data-search="false">Action</th>
 
@@ -141,6 +144,10 @@
                     name: 'last_name'
                 },
                 {
+                    data: 'company_name',
+                    name: 'company_name'
+                },
+                {
                     data: 'email',
                     name: 'email'
                 },
@@ -151,6 +158,14 @@
                 {
                     data: 'city_name',
                     name: 'city_name'
+                },
+                {
+                    data: 'country_name',
+                    name: 'country_name'
+                },
+                {
+                    data: 'country_code',
+                    name: 'country_code'
                 },
                 {
                     data: 'status',
@@ -200,6 +215,12 @@
                         </div>
                         <div class="c-col-6">
                         <div class="c-detail-card">
+                            <label>Company Name</label>
+                            <p>${data.company_name ?? '-'}</p>
+                        </div>
+                        </div>
+                        <div class="c-col-6">
+                        <div class="c-detail-card">
                             <label>Email</label>
                             <p>${data.email ?? '-'}</p>
                         </div>
@@ -214,6 +235,18 @@
                         <div class="c-detail-card">
                             <label>City Name</label>
                             <p>${data.city_name ?? '-'}</p>
+                        </div>
+                        </div>
+                        <div class="c-col-6">
+                        <div class="c-detail-card">
+                            <label>Country Name</label>
+                            <p>${data.country_name ?? '-'}</p>
+                        </div>
+                        </div>
+                        <div class="c-col-6">
+                        <div class="c-detail-card">
+                            <label>Country Code</label>
+                            <p>${data.country_code ?? '-'}</p>
                         </div>
                         </div>
                         <div class="c-col-6">

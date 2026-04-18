@@ -34,14 +34,17 @@ class ContactSubmissionsController extends Controller
 
         try {
             $validator = Validator::make($request->all(), [
-                'first_name' => 'required|string|max:50',
-                'last_name'  => 'nullable|string|max:50',
-                'email'      => 'nullable|email|max:100',
-                'phone'      => 'nullable|string|max:20',
-                'city_name'  => 'required|string|max:100',
-                'product_id' => 'nullable|',
-                'subject'    => 'nullable|string|max:150',
-                'message'    => 'nullable|string',
+                'first_name'   => 'required|string|max:50',
+                'last_name'    => 'nullable|string|max:50',
+                'company_name' => 'nullable|string|max:150',
+                'email'        => 'nullable|email|max:100',
+                'phone'        => 'nullable|string|max:20',
+                'city_name'    => 'required|string|max:100',
+                'country_name' => 'nullable|string|max:100',
+                'country_code' => 'nullable|string|max:20',
+                'product_id'   => 'nullable|',
+                'subject'      => 'nullable|string|max:150',
+                'message'      => 'nullable|string',
             ]);
 
             if ($validator->fails()) {
@@ -50,14 +53,17 @@ class ContactSubmissionsController extends Controller
             }
 
             $contact = ContactSubmission::create([
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'email'      => $request->email,
-                'phone'      => $request->phone,
-                'city_name'  => $request->city_name,
-                'product_id' => $request->product_id,
-                'subject'    => $request->subject,
-                'message'    => $request->message,
+                'first_name'   => $request->first_name,
+                'last_name'    => $request->last_name,
+                'company_name' => $request->company_name,
+                'email'        => $request->email,
+                'phone'        => $request->phone,
+                'city_name'    => $request->city_name,
+                'country_name' => $request->country_name,
+                'country_code' => $request->country_code,
+                'product_id'   => $request->product_id,
+                'subject'      => $request->subject,
+                'message'      => $request->message,
             ]);
 
             return $this->sendResponse(
