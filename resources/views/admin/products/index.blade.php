@@ -332,11 +332,11 @@
                                             data.content_sections && data.content_sections.length > 0
                                             ? data.content_sections.map(section => {
                                                 if(section.type === 'content') {
-                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Text]</strong><br>${section.content}</div>`;
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>Text</strong><br>${section.content}</div>`;
                                                 } else if(section.type === 'image') {
-                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Image]</strong><br><img src="${baseUrl + section.image}" style="max-width:200px;"><br><small>${section.caption ?? ''}</small></div>`;
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>Image</strong><br><img src="${baseUrl + section.image}" style="max-width:200px;"><br><small>${section.caption ?? ''}</small></div>`;
                                                 } else if(section.type === 'link') {
-                                                    return `<div class="mb-2 border-bottom pb-1"><strong>[Link]</strong><br><a href="${section.link_url}" target="_blank">${section.link_text}</a><p>${section.link_desc ?? ''}</p></div>`;
+                                                    return `<div class="mb-2 border-bottom pb-1"><strong>Link</strong><br><a href="${section.link_url}" target="_blank">${section.link_text}</a><p>${section.link_desc ?? ''}</p></div>`;
                                                 }
                                                 return '';
                                             }).join("")

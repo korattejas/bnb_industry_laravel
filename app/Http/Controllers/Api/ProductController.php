@@ -125,7 +125,7 @@ class ProductController extends Controller
                     ->where('s.category_id', $product->category_id)
                     ->where('s.id', '!=', $product->id)
                     ->where('s.status', 1)
-                    ->orderByDesc('s.is_popular')
+                    ->orderByDesc('s.id')
                     ->limit(10)
                     ->get()
                     ->map(function ($item) {
@@ -172,7 +172,7 @@ class ProductController extends Controller
             $perPage = $request->per_page ?? 24;
             $page = $request->page ?? 1;
 
-            $products = $query->orderByDesc('s.is_popular')
+            $products = $query->orderByDesc('s.id')
                 ->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($product) {
                     $product->includes = $product->includes ? json_decode($product->includes, true) : [];
