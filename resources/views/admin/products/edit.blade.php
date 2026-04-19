@@ -620,12 +620,47 @@
             }
         }
 
+        function syncSections() {
+            const sectionsData = [];
+            $('.section-card').each(function() {
+                const type = $(this).data('type');
+                const section = { type: type };
+                
+                if (type === 'content') {
+                    const textarea = $(this).find('textarea.editor').get(0);
+                    if (textarea && textarea.ckeditorInstance) {
+                        section.content = textarea.ckeditorInstance.getData();
+                    } else {
+                        section.content = $(this).find('textarea').val();
+                    }
+                } else if (type === 'image') {
+                    section.alt = $(this).find('.section-alt').val();
+                    section.caption = $(this).find('.section-caption').val();
+                    // Keep existing image if not uploading a new one
+                    const existingImg = $(this).find('.image-preview-section').attr('src');
+                    if (existingImg && !existingImg.startsWith('data:')) {
+                        const parts = existingImg.split('/');
+                        section.image = parts[parts.length - 1];
+                    }
+                } else if (type === 'link') {
+                    section.link_text = $(this).find('.section-link-text').val();
+                    section.link_url = $(this).find('.section-link-url').val();
+                    section.link_desc = $(this).find('.section-link-desc').val();
+                }
+                sectionsData.push(section);
+            });
+            $('#content_sections_data').val(JSON.stringify(sectionsData));
+        }
+
         function initEditor(el) {
             if (typeof ClassicEditor !== 'undefined') {
                 ClassicEditor.create(el, {
                     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo']
                 }).then(editor => {
                     el.ckeditorInstance = editor;
+                    editor.model.document.on('change:data', () => {
+                        syncSections();
+                    });
                 }).catch(error => console.error(error));
             }
         }
@@ -639,6 +674,7 @@
                     preview.style.display = 'block';
                     input.closest('.image-upload-wrapper-section').querySelector('p').style.display = 'none';
                     input.closest('.image-upload-wrapper-section').querySelector('i').style.display = 'none';
+                    syncSections();
                 }
                 reader.readAsDataURL(input.files[0]);
             }
@@ -659,30 +695,16 @@
                 addSection('content');
             @endif
 
+            $(document).on('click', 'button[type="submit"]', function() {
+                syncSections();
+            });
+
+            $(document).on('change', '.section-card input, .section-card textarea', function() {
+                syncSections();
+            });
+
             $('#addEditForm').on('submit', function(e) {
-                const sectionsData = [];
-                $('.section-card').each(function() {
-                    const type = $(this).data('type');
-                    const section = { type: type };
-                    
-                    if (type === 'content') {
-                        const textarea = $(this).find('textarea.editor').get(0);
-                        if (textarea && textarea.ckeditorInstance) {
-                            section.content = textarea.ckeditorInstance.getData();
-                        } else {
-                            section.content = $(this).find('textarea').val();
-                        }
-                    } else if (type === 'image') {
-                        section.alt = $(this).find('.section-alt').val();
-                        section.caption = $(this).find('.section-caption').val();
-                    } else if (type === 'link') {
-                        section.link_text = $(this).find('.section-link-text').val();
-                        section.link_url = $(this).find('.section-link-url').val();
-                        section.link_desc = $(this).find('.section-link-desc').val();
-                    }
-                    sectionsData.push(section);
-                });
-                $('#content_sections_data').val(JSON.stringify(sectionsData));
+                syncSections();
             });
         });
     </script>

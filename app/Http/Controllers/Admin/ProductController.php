@@ -216,41 +216,44 @@ class ProductController extends Controller
             }
 
             // Handle section images if any
-            $content_sections = $request->input('content_sections', '[]');
-            $sections = json_decode($content_sections, true);
+            $content_sections_string = $request->input('content_sections', '[]');
+            $sections = json_decode($content_sections_string, true);
+            if (!is_array($sections)) {
+                $sections = [];
+            }
 
             // If editing, get old sections for cleanup
             $oldSections = [];
-            if ($id != 0) {
-                if ($product && $product->content_sections) {
-                    $oldSections = is_array($product->content_sections) ? $product->content_sections : json_decode($product->content_sections, true);
+            if ($id != 0 && $product) {
+                $oldSections = is_array($product->content_sections) ? $product->content_sections : json_decode($product->content_sections, true);
+                if (!is_array($oldSections)) {
+                    $oldSections = [];
                 }
             }
 
-            if (is_array($sections)) {
-                foreach ($sections as $key => $section) {
-                    $fileKey = 'section_image_' . $key;
-                    if ($section['type'] == 'image') {
-                        if ($request->hasFile($fileKey)) {
-                            if (isset($oldSections[$key]['image']) && $oldSections[$key]['image']) {
-                                $oldFilePath = public_path('uploads/product/' . $oldSections[$key]['image']);
-                                if (File::exists($oldFilePath)) {
-                                    File::delete($oldFilePath);
-                                }
+            foreach ($sections as $key => $section) {
+                $fileKey = 'section_image_' . $key;
+                if (isset($section['type']) && $section['type'] == 'image') {
+                    if ($request->hasFile($fileKey)) {
+                        if (isset($oldSections[$key]['image']) && $oldSections[$key]['image']) {
+                            $oldFilePath = public_path('uploads/product/' . $oldSections[$key]['image']);
+                            if (File::exists($oldFilePath)) {
+                                File::delete($oldFilePath);
                             }
-
-                            $sectionImage = ImageUploadHelper::productimageUpload($request->file($fileKey));
-                            $sections[$key]['image'] = $sectionImage;
-                        } elseif (isset($oldSections[$key]['image'])) {
-                            $sections[$key]['image'] = $oldSections[$key]['image'];
                         }
+
+                        $sectionImage = ImageUploadHelper::productimageUpload($request->file($fileKey));
+                        $sections[$key]['image'] = $sectionImage;
+                    } elseif (isset($oldSections[$key]['image'])) {
+                        $sections[$key]['image'] = $oldSections[$key]['image'];
                     }
                 }
-                $content_sections = $sections;
             }
+            $content_sections = $sections;
 
             $data = [
                 'category_id' => $request->category_id,
+                'sub_category_id' => $request->sub_category_id,
                 'name'        => $request->name,
                 'watt'        => $request->watt,
                 'price'       => $request->price,
@@ -266,8 +269,11 @@ class ProductController extends Controller
                 Product::create($data);
                 return response()->json(['success' => true, 'message' => "Product added successfully"]);
             } else {
-                Product::where('id', $id)->update($data);
-                return response()->json(['success' => true, 'message' => "Product updated successfully"]);
+                if ($product) {
+                    $product->update($data);
+                    return response()->json(['success' => true, 'message' => "Product updated successfully"]);
+                }
+                return response()->json(['success' => false, 'message' => "Product not found"], 404);
             }
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, $function_name);
