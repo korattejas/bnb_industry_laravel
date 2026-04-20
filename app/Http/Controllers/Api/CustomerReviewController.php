@@ -16,6 +16,7 @@ class CustomerReviewController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->controller_name = 'API/CustomerReviewController';
         $this->success_status = config('custom.status_code_for_success');
         $this->exception_status = config('custom.status_code_for_exception_error');

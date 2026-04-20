@@ -24,6 +24,7 @@ class AuthenticationController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->controller_name = 'API/AuthenticationController';
         $this->success_status = config('custom.status_code_for_success');
         $this->exception_status = config('custom.status_code_for_exception_error');
@@ -535,7 +536,7 @@ class AuthenticationController extends Controller
             $token = JWTAuth::getToken();
             JWTAuth::invalidate($token);
             auth()->guard('user')->logout();
-            return response()->json(['status' => 200, 'message' => 'Logged out successfully']);
+            return $this->sendResponse([], 'Logged out successfully', $this->success_status);
         } catch (Exception $e) {
             logCatchException($e, $this->controller_name, $function_name);
             return $this->sendError($this->common_error_message, $this->exception_status);

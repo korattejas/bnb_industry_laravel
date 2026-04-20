@@ -17,6 +17,7 @@ class SettingController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->controller_name = 'API/SettingController';
         $this->success_status = config('custom.status_code_for_success');
         $this->exception_status = config('custom.status_code_for_exception_error');
@@ -40,12 +41,11 @@ class SettingController extends Controller
                 return $this->sendError('No Setting found.', $this->backend_error_status);
             }
 
-            return response()->json([
-                'code' => 200,
-                'status' => true,
-                'message' => 'Settings retrieved successfully',
-                'data' => $settings,
-            ]);
+            return $this->sendResponse(
+                $settings,
+                'Settings retrieved successfully',
+                $this->success_status
+            );
         } catch (\Exception $e) {
             logCatchException($e, $this->controller_name, $function_name);
 

@@ -15,6 +15,7 @@ class ClientController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->controller_name = 'API/ClientController';
         $this->success_status = config('custom.status_code_for_success') ?? 200;
         $this->exception_status = config('custom.status_code_for_exception_error') ?? 500;
