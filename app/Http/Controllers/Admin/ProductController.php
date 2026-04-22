@@ -180,6 +180,10 @@ class ProductController extends Controller
                 'content_sections' => 'nullable|string',
                 'photos'   => 'nullable|array',
                 'photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp',
+                'meta_title' => 'nullable|string',
+                'meta_description' => 'nullable|string',
+                'meta_keyword' => 'nullable|string',
+                'product_brochure_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,pdf',
             ];
 
             $validator = Validator::make($request_all, $validateArray);
@@ -203,6 +207,17 @@ class ProductController extends Controller
                     $filename = ImageUploadHelper::productimageUpload($image);
                     $storedImages[] = $filename;
                 }
+            }
+
+            $product_brochure_photo = $product ? $product->product_brochure_photo : null;
+            if ($request->hasFile('product_brochure_photo')) {
+                if ($product_brochure_photo) {
+                    $oldBrochurePath = public_path('uploads/product-brochure/' . $product_brochure_photo);
+                    if (File::exists($oldBrochurePath)) {
+                        File::delete($oldBrochurePath);
+                    }
+                }
+                $product_brochure_photo = ImageUploadHelper::productBrochureUpload($request->file('product_brochure_photo'));
             }
 
             $includes = null;
@@ -263,6 +278,10 @@ class ProductController extends Controller
                 'images'      => !empty($storedImages) ? $storedImages : null,
                 'is_popular'  => (int) $request->is_popular,
                 'status'      => (int) $request->status,
+                'meta_title'  => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keyword' => $request->meta_keyword,
+                'product_brochure_photo' => $product_brochure_photo,
             ];
 
             if ($id == 0) {
@@ -313,6 +332,13 @@ class ProductController extends Controller
                         if (File::exists($filePath)) {
                             File::delete($filePath);
                         }
+                    }
+                }
+
+                if ($product->product_brochure_photo) {
+                    $brochurePath = public_path('uploads/product-brochure/' . $product->product_brochure_photo);
+                    if (File::exists($brochurePath)) {
+                        File::delete($brochurePath);
                     }
                 }
 

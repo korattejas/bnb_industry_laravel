@@ -22,6 +22,10 @@ class Product extends Model
         'images',
         'is_popular',
         'status',
+        'meta_title',
+        'meta_description',
+        'meta_keyword',
+        'product_brochure_photo',
     ];
 
     protected $casts = [

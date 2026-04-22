@@ -74,4 +74,9 @@ class ImageUploadHelper
     {
         return self::upload($file, 'clients');
     }
+
+    public static function productBrochureUpload($file)
+    {
+        return self::upload($file, 'product-brochure');
+    }
 }

@@ -102,6 +102,19 @@ class ProductController extends Controller
                     return $this->sendError('Product not found.', $this->backend_error_status);
                 }
 
+                // Add SEO and brochure fields for single product view
+                $singleProduct = DB::table('products as s')
+                    ->where('s.id', $request->product_id)
+                    ->select('s.meta_title', 's.meta_description', 's.meta_keyword', 's.product_brochure_photo')
+                    ->first();
+
+                if ($singleProduct) {
+                    $product->meta_title = $singleProduct->meta_title;
+                    $product->meta_description = $singleProduct->meta_description;
+                    $product->meta_keyword = $singleProduct->meta_keyword;
+                    $product->product_brochure_photo = $singleProduct->product_brochure_photo ? asset('uploads/product-brochure/' . $singleProduct->product_brochure_photo) : null;
+                }
+
                 // Process includes and images for the single product
                 $product->includes = $product->includes ? json_decode($product->includes, true) : [];
                 $product->content_sections = $product->content_sections ? json_decode($product->content_sections, true) : [];

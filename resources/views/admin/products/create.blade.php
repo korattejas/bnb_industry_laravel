@@ -236,6 +236,40 @@
                                                 </div>
                                             </div>
 
+                                            <!-- SEO Fields -->
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">SEO Information</label>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Title</label>
+                                                            <input type="text" class="form-control" name="meta_title" placeholder="Meta Title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Keywords</label>
+                                                            <input type="text" class="form-control" name="meta_keyword" placeholder="Keywords (comma separated)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Description</label>
+                                                            <textarea class="form-control" name="meta_description" rows="3" placeholder="Meta Description"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Product Brochure -->
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">Product Brochure (PDF/Image)</label>
+                                                <div class="form-group">
+                                                    <input type="file" class="form-control" name="product_brochure_photo" accept="image/*,application/pdf">
+                                                    <p class="text-muted small mt-1">Upload product brochure in PDF or Image format</p>
+                                                </div>
+                                            </div>
+
                                             <!-- Images -->
                                             <div class="col-12 mt-4">
                                                 <label class="form-label-luxury">Product Gallery Collection</label>

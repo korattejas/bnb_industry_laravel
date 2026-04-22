@@ -294,6 +294,50 @@
                                                 </div>
                                             </div>
 
+                                            <!-- SEO Fields -->
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">SEO Information</label>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Title</label>
+                                                            <input type="text" class="form-control" name="meta_title" value="{{ $product->meta_title }}" placeholder="Meta Title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Keywords</label>
+                                                            <input type="text" class="form-control" name="meta_keyword" value="{{ $product->meta_keyword }}" placeholder="Keywords (comma separated)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <div class="form-group">
+                                                            <label>Meta Description</label>
+                                                            <textarea class="form-control" name="meta_description" rows="3" placeholder="Meta Description">{{ $product->meta_description }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Product Brochure -->
+                                            <div class="col-12 mt-4">
+                                                <label class="form-label-luxury">Product Brochure (PDF/Image)</label>
+                                                <div class="form-group">
+                                                    @if($product->product_brochure_photo)
+                                                        <div class="mb-2">
+                                                            <span class="badge bg-light text-dark border p-2">
+                                                                Current Brochure: 
+                                                                <a href="{{ asset('uploads/product-brochure/' . $product->product_brochure_photo) }}" target="_blank">
+                                                                    View Current File
+                                                                </a>
+                                                            </span>
+                                                        </div>
+                                                    @endif
+                                                    <input type="file" class="form-control" name="product_brochure_photo" accept="image/*,application/pdf">
+                                                    <p class="text-muted small mt-1">Upload new brochure to replace existing one (PDF or Image)</p>
+                                                </div>
+                                            </div>
+
                                             <div class="col-12 mt-4">
                                                 <label class="form-label-luxury">Product Gallery Collection</label>
                                                 
@@ -312,7 +356,6 @@
                                                         @endforeach
                                                     </div>
                                                 @endif
-
                                                 <div class="upload-zone p-4 text-center">
                                                     <i class="bi bi-cloud-arrow-up-fill mb-2" style="font-size: 2.5rem; color: var(--mst-indigo);"></i>
                                                     <h5 class="mb-3">Add More Photos</h5>
