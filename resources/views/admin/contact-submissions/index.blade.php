@@ -72,6 +72,7 @@
                                                 <th>City Name</th>
                                                 <th>Country Name</th>
                                                 <th>Country Code</th>
+                                                <th>Pincode</th>
                                                 <th data-stuff="Active,InActive">Status</th>
                                                 <th data-search="false">Action</th>
 
@@ -168,6 +169,10 @@
                     name: 'country_code'
                 },
                 {
+                    data: 'pincode',
+                    name: 'pincode'
+                },
+                {
                     data: 'status',
                     name: 'status'
                 },
@@ -247,6 +252,12 @@
                         <div class="c-detail-card">
                             <label>Country Code</label>
                             <p>${data.country_code ?? '-'}</p>
+                        </div>
+                        </div>
+                        <div class="c-col-6">
+                        <div class="c-detail-card">
+                            <label>Pincode</label>
+                            <p>${data.pincode ?? '-'}</p>
                         </div>
                         </div>
                         <div class="c-col-6">

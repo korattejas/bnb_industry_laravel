@@ -18,6 +18,7 @@ class ContactSubmission extends Model
         'city_name',
         'country_name',
         'country_code',
+        'pincode',
         'product_id',
         'subject',
         'message',

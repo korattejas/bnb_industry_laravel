@@ -183,7 +183,7 @@ class ProductController extends Controller
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
                 'meta_keyword' => 'nullable|string',
-                'product_brochure_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,pdf',
+                'product_brochure_photo' => 'nullable|mimes:jpeg,png,jpg,gif,svg,webp,pdf|max:10240',
             ];
 
             $validator = Validator::make($request_all, $validateArray);
