@@ -20,7 +20,7 @@ use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
-Route::get('logs/BeautyDen@admin.com/8998', [LogViewerController::class, 'index']);
+Route::get('logs/bnbindustry@gmail.com/8998', [LogViewerController::class, 'index']);
 
 Route::get('/', function () {
     return view('welcome');
@@ -174,10 +174,10 @@ Route::group(['prefix' => 'admin'], function () {
 
         /* Contact Submissions Route */
         Route::get('contact-submissions', [ContactSubmissionsController::class, 'index'])->name('admin.contact-submissions.index');
-        Route::get('getDataContactSubmissions', [ContactSubmissionsController::class, 'getDataContactSubmissions'])->name('getDataContactSubmissions');
-        Route::get('contact-submissions/status/{id}/{status}', [ContactSubmissionsController::class, 'changeStatus']);
-        Route::delete('contact-submissions/{id}', [ContactSubmissionsController::class, 'destroy']);
-        Route::get('contact-submissions-view/{id}', [ContactSubmissionsController::class, 'view']);
+        Route::get('getDataContactSubmissions', [ContactSubmissionsController::class, 'getDataContactSubmissions'])->name('admin.contact-submissions.data');
+        Route::get('contact-submissions/status/{id}/{status}', [ContactSubmissionsController::class, 'changeStatus'])->name('admin.contact-submissions.status');
+        Route::delete('contact-submissions/{id}', [ContactSubmissionsController::class, 'destroy'])->name('admin.contact-submissions.destroy');
+        Route::get('contact-submissions-view/{id}', [ContactSubmissionsController::class, 'view'])->name('admin.contact-submissions.view');
 
 
 

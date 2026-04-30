@@ -30,6 +30,9 @@ class DashboardController extends Controller
     {
         $function_name = 'index';
         try {
+            if (auth()->guard('admin')->user()->role == 'sales') {
+                return redirect()->route('admin.contact-submissions.index');
+            }
             $totalContacts = ContactSubmission::count();
             $totalProductCategory = ProductCategory::where('status', 1)->count();
             $totalProducts = Product::where('status', 1)->count();

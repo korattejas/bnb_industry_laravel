@@ -151,6 +151,7 @@
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
+            @if(Auth::guard('admin')->user()->role == 'admin')
             <li class=" nav-item {{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('admin.dashboard') }}">
                     <i data-feather="grid"></i>
@@ -188,6 +189,7 @@
                     <span class="menu-title text-truncate">Categories</span>
                 </a>
             </li>
+            @endif
 
             <li class=" navigation-header">
                 <span>Communication</span>
@@ -200,6 +202,7 @@
                 </a>
             </li>
 
+            @if(Auth::guard('admin')->user()->role == 'admin')
             <li class=" navigation-header">
                 <span>Content</span>
             </li>
@@ -242,6 +245,7 @@
                     <span class="menu-title text-truncate">Settings</span>
                 </a>
             </li>
+            @endif
 
             <li class="nav-item">
                 <a class="d-flex align-items-center" href="{{ route('admin.logout') }}">

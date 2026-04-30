@@ -26,6 +26,9 @@ class LoginController extends Controller
         $function_name = 'index';
         try {
             if (Auth::guard('admin')->check() && Auth::guard('admin')->user()) {
+                if (Auth::guard('admin')->user()->role == 'sales') {
+                    return redirect()->route('admin.contact-submissions.index');
+                }
                 return redirect()->route('admin.dashboard');
             }
             return view('admin.auth.login');
@@ -42,8 +45,13 @@ class LoginController extends Controller
         try {
             if (auth()->guard('admin')->attempt(['email' => $request->login_email, 'password' => $request->login_password, 'status' => "1"])) {
                 if (Auth::guard('admin')->user()->status == '1') {
+                    $redirect_url = 'dashboard';
+                    if (Auth::guard('admin')->user()->role == 'sales') {
+                        $redirect_url = 'contact-submissions';
+                    }
                     return response()->json([
                         'message' => trans('admin_string.login_success'),
+                        'redirect_url' => $redirect_url,
                     ]);
                 } else {
                     return response()->json([

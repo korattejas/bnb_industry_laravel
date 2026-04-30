@@ -20,7 +20,8 @@ $(function () {
                         pond.removeFiles();
                     }
                     setTimeout(function () {
-                        window.location.href = APP_URL + "/" + redirect_url;
+                        let final_redirect = response.data.redirect_url ? response.data.redirect_url : redirect_url;
+                        window.location.href = APP_URL + "/" + final_redirect;
                         loaderHide();
                     }, 1000);
                     notificationToast(response.data.message, "success");
